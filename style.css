@@ -261,8 +261,12 @@ main { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
 .project__body > p:not(.project__kicker) { color: var(--dim); font-size: 14px; }
 .project .links { margin-top: auto; padding-top: 8px; }
 
-.status { display: inline-flex; align-items: center; gap: 6px; color: var(--green); }
-.status i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 2s steps(1) infinite; }
+.status_good { display: inline-flex; align-items: center; gap: 6px; color: var(--green); }
+.status_good i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 2s steps(1) infinite; }
+.status_soon { display: inline-flex; align-items: center; gap: 6px; color: var(--cyan); }
+.status_soon i { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); animation: blink 2s steps(1) infinite; }
+.status_under_construction { display: inline-flex; align-items: center; gap: 6px; color: var(--amber); }
+.status_under_construction i { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 8px var(--amber); animation: blink 2s steps(1) infinite; }
 
 /* Shipyard demo terminal */
 .sim { border: 1px solid var(--line); background: var(--bg); }
