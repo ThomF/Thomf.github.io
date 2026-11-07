@@ -264,6 +264,31 @@ main { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
 .status { display: inline-flex; align-items: center; gap: 6px; color: var(--green); }
 .status i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 2s steps(1) infinite; }
 
+/* Shipyard demo terminal */
+.sim { border: 1px solid var(--line); background: var(--bg); }
+.sim__bar {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  padding: 5px 10px; border-bottom: 1px solid var(--line);
+  font-size: 11px; letter-spacing: .1em; color: var(--dim);
+}
+.sim__btn {
+  font: inherit; letter-spacing: inherit; color: var(--accent);
+  background: none; border: 0; cursor: pointer; padding: 2px 4px;
+}
+.sim__btn:hover { text-decoration: underline; }
+.sim__btn:focus-visible { outline: 1px solid var(--accent); }
+.sim__out {
+  margin: 0; padding: 10px 12px;
+  font: 12px/1.6 var(--mono); color: var(--text);
+  white-space: pre-wrap; min-height: calc(7 * 1.6em + 20px);
+}
+.sim__cmd { color: var(--accent); }
+.sim__tag { color: var(--cyan); }
+.sim__ok { color: var(--green); }
+.sim__bad { color: var(--red); }
+.sim__dim { color: var(--dim); }
+.sim__caret { color: var(--accent); animation: blink 1s steps(1) infinite; }
+
 /* Buttons */
 .links { display: flex; flex-wrap: wrap; gap: 10px; }
 .btn {

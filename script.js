@@ -59,3 +59,97 @@ document.querySelectorAll(".label, .window, .project, .chips, .contact__line").f
   el.classList.add("reveal");
   io.observe(el);
 });
+
+// ── Shipyard demo terminal ─────────────────────────────────────
+// A scripted (fake) run: nothing here talks to a server.
+// Each run: the feature request, then [tag, text, result] steps.
+// result: "ok" ✓, "bad" ✗, "ship" ↗, or "" for none.
+const SHIPYARD_RUNS = [
+  { ask: "add dark mode toggle", steps: [
+    ["plan",  "3 tasks · 2 files", ""],
+    ["build", "dev agent → ThemeToggle.vue", "ok"],
+    ["test",  "tester agent → 1 failing", "bad"],
+    ["fix",   "patched contrast check", "ok"],
+    ["test",  "12 passing", "ok"],
+    ["ship",  "PR opened", "ship"],
+  ]},
+  { ask: "rate-limit the login route", steps: [
+    ["plan",  "2 tasks · 3 files", ""],
+    ["build", "dev agent → rateLimit.ts", "ok"],
+    ["test",  "tester agent → 2 failing", "bad"],
+    ["fix",   "limit per IP, not global", "ok"],
+    ["test",  "27 passing", "ok"],
+    ["ship",  "PR opened", "ship"],
+  ]},
+  { ask: "export crates to CSV", steps: [
+    ["plan",  "4 tasks · 3 files", ""],
+    ["build", "dev agent → exportCsv.ts", "ok"],
+    ["build", "dev agent → ExportButton.vue", "ok"],
+    ["test",  "tester agent → 9 passing", "ok"],
+    ["ship",  "PR opened", "ship"],
+  ]},
+];
+
+(() => {
+  const out = document.getElementById("sim-out");
+  const replay = document.getElementById("sim-replay");
+  if (!out || !replay) return;            // static fallback log stays as-is
+
+  const MARK = { ok: ["sim__ok", "✓"], bad: ["sim__bad", "✗"], ship: ["sim__ok", "↗"] };
+  const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const span = (cls, text) => Object.assign(document.createElement("span"), { className: cls, textContent: text });
+  let runIndex = 0, token = 0;
+
+  // Waits, but pauses while the tab is hidden and stops if a newer run started.
+  const wait = (ms, my) => new Promise((done) => {
+    const step = () => {
+      if (my !== token) return;
+      if (document.hidden) return setTimeout(step, 250);
+      setTimeout(() => my === token && done(), ms);
+    };
+    step();
+  });
+
+  function renderInstant(run) {
+    out.textContent = "";
+    out.append(span("sim__cmd", `> /shipyard "${run.ask}"`));
+    for (const [tag, text, res] of run.steps) {
+      out.append("\n", span("sim__tag", `[${tag}]`), " ".repeat(6 - tag.length) + text);
+      if (MARK[res]) out.append(" ", span(...MARK[res]));
+    }
+  }
+
+  async function play(run) {
+    const my = ++token;
+    if (reduced()) return renderInstant(run);
+    out.textContent = "";
+    const cmd = span("sim__cmd", "> ");
+    const caret = span("sim__caret", "▮");
+    out.append(cmd, caret);
+    for (const ch of `/shipyard "${run.ask}"`) {
+      cmd.textContent += ch;
+      await wait(35 + Math.random() * 45, my);
+    }
+    await wait(500, my);
+    for (const [tag, text, res] of run.steps) {
+      const line = span("", "");
+      line.append("\n", span("sim__tag", `[${tag}]`), " ".repeat(6 - tag.length) + text);
+      const dots = span("sim__dim", " …");
+      line.append(dots);
+      out.insertBefore(line, caret);
+      await wait(600 + Math.random() * 700, my);
+      dots.remove();
+      if (MARK[res]) line.append(" ", span(...MARK[res]));
+      await wait(250, my);
+    }
+    caret.remove();
+  }
+
+  function next() { play(SHIPYARD_RUNS[runIndex++ % SHIPYARD_RUNS.length]); }
+  replay.addEventListener("click", next);
+
+  // Start the first run when the card scrolls into view.
+  new IntersectionObserver((entries, obs) => {
+    if (entries.some((e) => e.isIntersecting)) { obs.disconnect(); next(); }
+  }, { threshold: 0.4 }).observe(out);
+})();

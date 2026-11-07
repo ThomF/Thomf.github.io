@@ -150,6 +150,20 @@
               as they build your feature, test it, and fix any issues. When the feature is ready,
               it can even ship it to your repo.
             </p>
+            <!-- Scripted demo run. Edit the runs in script.js (SHIPYARD_RUNS). -->
+            <div class="sim" id="sim">
+              <div class="sim__bar">
+                <span>~/your-repo</span>
+                <button class="sim__btn" id="sim-replay" type="button">↻ run again</button>
+              </div>
+              <pre class="sim__out" id="sim-out" aria-live="off"><span class="sim__cmd">&gt; /shipyard "add dark mode toggle"</span>
+<span class="sim__tag">[plan]</span>  3 tasks · 2 files
+<span class="sim__tag">[build]</span> dev agent → ThemeToggle.vue <span class="sim__ok">✓</span>
+<span class="sim__tag">[test]</span>  tester agent → 1 failing <span class="sim__bad">✗</span>
+<span class="sim__tag">[fix]</span>   patched contrast check <span class="sim__ok">✓</span>
+<span class="sim__tag">[test]</span>  12 passing <span class="sim__ok">✓</span>
+<span class="sim__tag">[ship]</span>  PR opened <span class="sim__ok">↗</span></pre>
+            </div>
             <ul class="tags"><li>AI Agents</li><li>Dev Tools</li><li>CLI</li></ul>
             <div class="links">
               <a href="#" class="btn">Launch ↗</a>
