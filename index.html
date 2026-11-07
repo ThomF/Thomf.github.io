@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thomas Fuhriman</title>
+  <meta name="description" content="Thomas Fuhriman — builder of Frisson and Shipyard.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="crt" aria-hidden="true"></div>
+
+  <!-- ─── TOP BAR ─────────────────────────────────────────── -->
+  <header class="sysbar">
+    <span class="sysbar__logo">TF//OS</span>
+    <nav>
+      <a href="#about">01 About</a>
+      <a href="#work">02 Projects</a>
+      <a href="#contact">03 Contact</a>
+    </nav>
+    <span class="sysbar__clock" id="clock">--:--:--</span>
+  </header>
+
+  <!-- ─── HERO: floating name + ASCII face ─────────────────── -->
+  <section class="hero" id="top">
+    <h1 class="name" aria-label="Thomas">
+      <span>T</span><span>H</span><span>O</span><span>M</span><span>A</span><span>S</span>
+    </h1>
+
+    <div class="face" id="face" aria-label="ASCII portrait of Thomas">
+      <pre class="face__base" aria-hidden="true"></pre>
+      <pre class="face__lit" aria-hidden="true"></pre>
+      <div class="face__scan" aria-hidden="true"></div>
+    </div>
+
+    <p class="hero__tag"><span class="blink">▮</span> builder · tinkerer · Daft Punk Enjoyer</p>
+    <a class="scroll-cue" href="#about">scroll ↓</a>
+    <div class="grid-floor" aria-hidden="true"></div>
+  </section>
+
+  <main>
+    <!-- ─── ABOUT ──────────────────────────────────────────── -->
+    <section class="section" id="about">
+      <div class="label"><span>01</span> About</div>
+
+      <div class="window">
+        <div class="window__bar">
+          <span class="window__title">ABOUT_ME.TXT</span>
+          <span class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="window__body about">
+          <!-- ✏️ EDIT: your bio -->
+          <p class="lead">Hi, I'm Thomas. I build tools that can change your life.</p>
+          <p>
+            I'm an application developer in Boise, Idaho. By day I build apps at Pennant: meeting
+            systems, patient trackers for clinicians, and reporting dashboards that put data in
+            view at a glance. On the side, I build projects that push me to be creative, like a
+            digital record crate for my music collection and an agent plugin that plans, builds,
+            tests and ships features on its own.
+          </p>
+        </div>
+      </div>
+
+      <div class="window">
+        <div class="window__bar">
+          <span class="window__title">EXPERIENCE.LOG</span>
+          <span class="window__meta">2 entries</span>
+        </div>
+        <!-- ✏️ EDIT: your experience. Copy a <li> to add one. -->
+        <ol class="window__body log">
+          <li>
+            <span class="log__when">Nov 2023 — now</span>
+            <div>
+              <h3>Application Developer <em>· Pennant</em></h3>
+              <p>Full-time, remote from Boise, Idaho. I build and maintain internal applications for Pennant Services in Retool.</p>
+            </div>
+          </li>
+          <li>
+            <span class="log__when">Jan — Apr 2023</span>
+            <div>
+              <h3>Full Stack Developer <em>· CodeWorks</em></h3>
+              <p>520+ hour software development bootcamp in Boise. C#, JavaScript, Vue 3 and Sass,
+                 shipping projects from a Pinterest clone to an event-sharing platform, and working
+                 on a dev team with Scrum and Agile.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- ✏️ EDIT: your toolkit -->
+      <ul class="chips">
+        <li>C#</li><li>JavaScript</li><li>TypeScript</li><li>Vue 3</li><li>Sass</li>
+        <li>Node / Fastify</li><li>SQLite</li><li>Docker</li><li>Scrum / Agile</li><li>Git</li><li>Retool</li><li>Svelte</li>
+      </ul>
+    </section>
+
+    <!-- ─── PROJECTS ───────────────────────────────────────── -->
+    <section class="section" id="work">
+      <div class="label"><span>02</span> Projects</div>
+
+      <div class="projects">
+        <!-- ✏️ EDIT: Frisson -->
+        <article class="project" style="--accent: var(--cyan)">
+          <div class="window__bar">
+            <span class="window__title">FRISSON.EXE</span>
+            <span class="status"><i></i>online</span>
+          </div>
+          <pre class="project__art" aria-hidden="true">
+  ▐█▌▐█▌▐█▌ ▄▄ ▐█▌▐█▌▐█▌
+ ┌┴─┴┴─┴┴─┴┐██┌┴─┴┴─┴┴─┴┐
+ │ CRATE 1 │▀▀│ CRATE 2 │
+ └─────────┘  └─────────┘</pre>
+          <div class="project__body">
+            <h2>Frisson</h2>
+            <p class="project__kicker">Your music collection, shelved like your local record shop.</p>
+            <p>
+              Flip through the sleeves, pull one out, and spin it. A self-hosted, hand-curated
+              record collection with crates you can sort and rearrange, cover art, accounts and
+              public profiles. Runs anywhere with Docker Compose.
+            </p>
+            <ul class="tags"><li>Vue 3</li><li>Fastify</li><li>SQLite</li><li>TypeScript</li><li>Docker</li></ul>
+            <div class="links">
+              <a href="#" class="btn">Launch ↗</a>
+              <a href="#" class="btn btn--ghost">Source</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ✏️ EDIT: Shipyard -->
+        <article class="project" style="--accent: var(--amber)">
+          <div class="window__bar">
+            <span class="window__title">SHIPYARD.EXE</span>
+            <span class="status"><i></i>online</span>
+          </div>
+          <pre class="project__art" aria-hidden="true">
+        |\
+        | \      ___
+   _____|__\____|___|__
+   \  ▪   ▪   ▪   ▪   /
+~~~~\________________/~~~~</pre>
+          <div class="project__body">
+            <h2>Shipyard</h2>
+            <p class="project__kicker">Point it at a repo. It plans, builds, tests, fixes and ships.</p>
+            <p>
+              Shipyard pilots a feature through your codebase on its own. It plugs into a coding
+              agent like Claude Code with custom commands that guide developer and tester agents
+              as they build your feature, test it, and fix any issues. When the feature is ready,
+              it can even ship it to your repo.
+            </p>
+            <ul class="tags"><li>AI Agents</li><li>Dev Tools</li><li>CLI</li></ul>
+            <div class="links">
+              <a href="#" class="btn">Launch ↗</a>
+              <a href="#" class="btn btn--ghost">Source</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ─── CONTACT ────────────────────────────────────────── -->
+    <section class="section contact" id="contact">
+      <div class="label"><span>03</span> Contact</div>
+      <p class="contact__line">&gt; open channel_</p>
+      <!-- ✏️ EDIT: your links -->
+      <div class="links">
+        <a href="mailto:you@example.com" class="btn">Email</a>
+        <a href="https://github.com/ThomF" class="btn btn--ghost">GitHub</a>
+        <a href="https://www.linkedin.com/in/thomas-fuhriman/" class="btn btn--ghost">LinkedIn</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>© <span id="year"></span> Thomas Fuhriman</span>
+    <span>TF//OS v1.0 — all systems nominal</span>
+  </footer>
+
+  <script src="assets/face.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
