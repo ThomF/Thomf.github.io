@@ -1,0 +1,29 @@
+width 1280
+   ok 1280 sim plays real run first
+   ok 1280 sim dir ~/frisson
+   ok 1280 run again moves to next run
+   ok 1280 index no horizontal scroll
+   ok 1280 closed initially
+   ok 1280 summary click opens
+   ok 1280 body visible
+   ok 1280 index no hscroll with disclosure open
+   ok 1280 #harbor in view top=0
+   ok 1280 report lists AC12
+   ok 1280 report renders verdict
+   ok 1280 shipyard.html no hscroll (sw=1280)
+   ok 1280 no console errors []
+width 390
+   ok 390 sim plays real run first
+   ok 390 sim dir ~/frisson
+   ok 390 run again moves to next run
+   ok 390 index no horizontal scroll
+   ok 390 closed initially
+   ok 390 summary click opens
+   ok 390 body visible
+   ok 390 index no hscroll with disclosure open
+   ok 390 #harbor in view top=0
+   ok 390 report lists AC12
+   ok 390 report renders verdict
+   ok 390 shipyard.html no hscroll (sw=390)
+   ok 390 no console errors []
+PASS AC8

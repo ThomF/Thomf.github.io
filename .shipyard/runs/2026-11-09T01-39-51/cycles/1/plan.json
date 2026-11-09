@@ -1,0 +1,2 @@
+{ "summary": "One dev swaps the run view to the latest Frisson run, replays it in the card's sim, and adds the Harbor Pilot explainer.",
+  "tasks": [ { "id": "T1", "goal": "Show the latest Frisson run and explain the Harbor Pilot", "description": "See cycles/1/spec.md.", "ownsFiles": ["index.html","shipyard.html","script.js","style.css"], "dependsOn": [], "criteriaIds": ["AC1","AC2","AC3","AC4","AC5","AC6","AC7","AC8"], "model": "opus" } ] }

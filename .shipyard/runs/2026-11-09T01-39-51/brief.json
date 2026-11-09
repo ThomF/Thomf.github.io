@@ -1,0 +1,29 @@
+{
+  "goal": "The portfolio's Shipyard card and its run view (shipyard.html) show the latest real Frisson run, 2026-11-09T01-05-12 (single-crate view), and visitors can find out what the Harbor Pilot does, from a disclosure on the card and from a real review-guide excerpt on the run page.",
+  "constraints": [
+    "Plain HTML/CSS/JS: no build step and no dependencies, per the README",
+    "The run data embedded in shipyard.html stays the real report; the only allowed change is replacing the absolute local path in state.target",
+    "Harbor Pilot claims must match the Shipyard README: it is not a reviewer and does not approve, fix or score",
+    "Figures quoted about the run come from the run's own report, never estimated"
+  ],
+  "assumptions": [
+    "Latest Frisson run means the newest run directory in crate-digger/.shipyard/runs, which is 2026-11-09T01-05-12",
+    "The two invented demo runs in SHIPYARD_RUNS may stay after the real one",
+    "Push means pushing the Shipyard branch; merging to main, which publishes the site, stays with the owner"
+  ],
+  "risks": [
+    "The newer report template has no viewport meta and may overflow at phone width",
+    "A [harbor] tag breaks the sim's padding: it pads with 6 minus the tag length, so tags must be at most 5 characters",
+    "Long sim lines can wrap badly on a phone"
+  ],
+  "acceptanceCriteria": [
+    { "id": "AC1", "statement": "The run-data JSON in shipyard.html has state.runId 2026-11-09T01-05-12, verdict shipped, and 12 criteria all pass", "check": "command" },
+    { "id": "AC2", "statement": "The run-data JSON equals the source report.html's run-data JSON once state.target is ignored, and shipyard.html contains neither '/Users/' nor 'thomasfuhriman'", "check": "command" },
+    { "id": "AC3", "statement": "shipyard.html keeps the viewport meta, a back link to index.html#work and an intro naming the single-crate run; the strings 'first run' and '66 files' are gone", "check": "command" },
+    { "id": "AC4", "statement": "SHIPYARD_RUNS[0] in script.js has an ask containing 'only show the crate you are on', every tag is at most 5 characters, and the static #sim-out fallback in index.html starts with the same command", "check": "command" },
+    { "id": "AC5", "statement": "The Shipyard card in index.html has a details element whose summary contains 'Harbor Pilot' and whose raw HTML text says it does not approve, fix or score and names /harbor, /harbor ask and /harbor verify", "check": "command" },
+    { "id": "AC6", "statement": "The raw HTML of shipyard.html has an element with id=\"harbor\" before #app containing the path apps/web/src/router.ts:32-39 and the line path: '/crates/:id(\\\\d+)', as in REVIEW_GUIDE.md S1", "check": "command" },
+    { "id": "AC7", "statement": "node --check script.js exits 0, the branch's non-.shipyard changes are limited to index.html, shipyard.html, script.js and style.css, and no package.json exists", "check": "command" },
+    { "id": "AC8", "statement": "Served locally at 1280 and 390 px wide: the Harbor disclosure opens on click, its link lands on shipyard.html#harbor with the section in view, the sim plays the real run first and 'run again' moves to the next run, the report renders with AC12 listed, neither page scrolls horizontally, and the console shows no errors", "check": "browser" }
+  ]
+}

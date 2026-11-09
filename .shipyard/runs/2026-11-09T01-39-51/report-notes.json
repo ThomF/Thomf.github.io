@@ -1,0 +1,38 @@
+{
+  "plan_changes": [
+    {
+      "change": "Playwright not added to this repo; no owner question asked",
+      "why": "The README says no dependencies. The browser check borrows the Playwright already installed in the crate-digger checkout."
+    },
+    {
+      "change": "Dev added phone CSS to the shipyard.html wrapper",
+      "why": "The newer report template overflowed to 641px at 390px wide."
+    },
+    {
+      "change": "Card copy corrected from two made-up runs to three, outside the criteria",
+      "why": "The harbormaster spec miscounted the invented runs, so the public copy said something false. No criterion covered it."
+    }
+  ],
+  "notes": [
+    "Dev: sim wraps at 320px; wide report tables scroll inside themselves on phones; Firefox and Safari untested.",
+    "Exploratory pass did not get to the index card at phone width, the back link, or a clean run-again click; someone else was also using the pane. browser.mjs covers the first and last."
+  ],
+  "observations": [
+    {
+      "what": "Saved-scroll restore in the report JS could override #harbor on a return visit. Harbormaster repro in Chromium landed correctly; other browsers untested.",
+      "severity": "low"
+    },
+    {
+      "what": "The report section renders raw markdown rather than formatted text.",
+      "severity": "medium"
+    },
+    {
+      "what": "Harbormaster (runs the build) and Harbor Pilot (lays out the code) are easily confused by a first-time reader.",
+      "severity": "medium"
+    },
+    {
+      "what": "Stage times sum to 26m56s against a 24m43s wall clock because fix overlaps test; the run says shipped while its report says nothing merged at the time; ~/frisson in the sim vs crate-digger in the report.",
+      "severity": "low"
+    }
+  ]
+}

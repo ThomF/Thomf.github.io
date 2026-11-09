@@ -1,0 +1,10 @@
+{"cycle":1,"verdict":"pass","criteria":{
+"AC1":{"result":"pass","evidence":"parsed run-data: runId 2026-11-09T01-05-12, verdict shipped, 12 criteria all pass"},
+"AC2":{"result":"pass","evidence":"JSON equal to source report.html once state.target ignored (target is ~/code/crate-digger); grep finds no /Users/ or thomasfuhriman in shipyard.html"},
+"AC3":{"result":"pass","evidence":"viewport meta line 5; back link index.html#work line 147; intro names single-crate run on Frisson; 'first run' and '66 files' absent"},
+"AC4":{"result":"pass","evidence":"SHIPYARD_RUNS[0] ask 'only show the crate you are on'; all tags <=5 chars (max 'build'/'pilot'); #sim-out fallback starts with the same /shipyard command"},
+"AC5":{"result":"pass","evidence":"details.harbor summary \"What's the Harbor Pilot?\"; body says does not approve, fix or score; names /harbor, /harbor ask, /harbor verify"},
+"AC6":{"result":"pass","evidence":"section#harbor (line 161) before #app (186); contains apps/web/src/router.ts:32-39 and path: '/crates/:id(\\\\d+)' identical to REVIEW_GUIDE.md line 42"},
+"AC7":{"result":"pass","evidence":"node --check exit 0; git diff 6c9617f..HEAD files: index.html, script.js, shipyard.html, style.css; no package.json"},
+"AC8":{"result":"pass","evidence":"/Users/thomasfuhriman/code/portfolio/.shipyard/checks/browser.mjs, output browser-output.txt: all checks ok at 1280 and 390, PASS AC8"}},
+"observations":[{"severity":"low","text":"Harbor section lands at top=0 after anchor jump; no sticky header overlap measured."}]}

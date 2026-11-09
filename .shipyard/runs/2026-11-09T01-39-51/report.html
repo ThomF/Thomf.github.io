@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<title>SHIPYARD // 2026-11-09T01-39-51</title>
+<style>
+:root{
+  --bg:#0b0a08; --panel:#15120d; --panel2:#1d1812;
+  --amber:#ffb53d; --amber-dim:#8a6224; --amber-glow:rgba(255,181,61,.25);
+  --green:#7ddba0; --red:#ff6b4a; --grey:#6b6354;
+  --rule:#3a3024;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);}
+body{
+  font-family:"SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  color:var(--amber); font-size:13px; line-height:1.55;
+  padding:24px; max-width:1180px; margin:0 auto;
+  text-shadow:0 0 1px var(--amber-glow);
+}
+/* CRT scanlines */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:99;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.22) 2px 4px);
+}
+body::after{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:98;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%);
+}
+a{color:var(--amber)}
+.hazard{height:8px;background:repeating-linear-gradient(45deg,var(--amber-dim) 0 10px,#0b0a08 10px 20px);margin:14px 0;opacity:.6}
+header{border:2px solid var(--amber-dim);background:var(--panel);padding:14px 16px;position:relative}
+header h1{margin:0;font-size:22px;letter-spacing:.42em;font-weight:700}
+header h1 small{letter-spacing:.1em;font-size:11px;color:var(--amber-dim);display:block;margin-top:6px}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.chip{border:1px solid var(--rule);background:var(--panel2);padding:3px 9px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-dim)}
+.chip b{color:var(--amber);font-weight:600}
+.verdict{border-width:2px;padding:4px 12px;font-weight:700;letter-spacing:.2em}
+.v-shipped{border-color:var(--green);color:var(--green)}
+.v-failed{border-color:var(--red);color:var(--red)}
+.v-partial,.v-pending{border-color:var(--amber);color:var(--amber)}
+section{border:1px solid var(--rule);background:var(--panel);margin:18px 0}
+section>h2{
+  margin:0;padding:8px 14px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;
+  background:var(--panel2);border-bottom:1px solid var(--rule);color:var(--amber-dim);
+}
+section>.body{padding:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.crit{border:1px solid var(--rule);padding:9px 11px;background:var(--panel2)}
+.crit .id{font-weight:700;letter-spacing:.14em}
+.crit .st{float:right;font-size:11px;letter-spacing:.14em}
+.pass{color:var(--green)} .fail{color:var(--red)} .untested{color:var(--grey)}
+.crit p{margin:6px 0 0;color:#d9c9a6;font-size:12px}
+.bar{height:16px;border:1px solid var(--rule);background:#0c0a07;display:flex;margin-bottom:14px}
+.bar i{display:block;height:100%}
+.bar i.p{background:var(--green)} .bar i.f{background:var(--red)} .bar i.u{background:#2a2419}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{color:var(--amber-dim);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+td.mono{color:#d9c9a6}
+.tag{border:1px solid var(--rule);padding:1px 6px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-dim)}
+.t-done{border-color:var(--green);color:var(--green)}
+.t-blocked{border-color:var(--red);color:var(--red)}
+pre{background:#0c0a07;border:1px solid var(--rule);padding:11px;overflow:auto;white-space:pre-wrap;word-break:break-word;color:#d9c9a6;font-size:12px;margin:0}
+details{border:1px solid var(--rule);background:var(--panel2);margin:7px 0}
+details>summary{padding:7px 11px;cursor:pointer;letter-spacing:.14em;font-size:11px;text-transform:uppercase;color:var(--amber-dim)}
+details[open]>summary{border-bottom:1px solid var(--rule);color:var(--amber)}
+details .inner{padding:11px}
+.cycle-head{display:flex;align-items:center;gap:12px;margin:0 0 10px}
+.cycle-head h3{margin:0;font-size:13px;letter-spacing:.26em}
+.empty{color:var(--grey);font-style:italic}
+footer{color:var(--grey);font-size:11px;letter-spacing:.14em;text-align:center;padding:18px 0}
+@media print{body::before,body::after{display:none}}
+
+/* ── live telemetry ─────────────────────────────────────── */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(420%)}}
+@keyframes flicker{0%,100%{opacity:1}97%{opacity:1}98%{opacity:.82}99%{opacity:1}}
+header{animation:flicker 7s infinite}
+.live{border-color:var(--green)!important;color:var(--green)!important}
+.live .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:7px;animation:pulse 1.1s infinite;box-shadow:0 0 6px var(--green)}
+.scan{position:relative;overflow:hidden;height:3px;background:#0c0a07;border:1px solid var(--rule);border-left:0;border-right:0;margin:0}
+.scan i{position:absolute;top:0;left:0;height:100%;width:24%;background:linear-gradient(90deg,transparent,var(--amber),transparent);animation:sweep 2.4s linear infinite}
+/* stage pipeline */
+.pipe{display:flex;gap:0;margin:12px 0 2px;border:1px solid var(--rule);background:#0c0a07}
+.pipe div{flex:1;text-align:center;padding:7px 2px;font-size:10px;letter-spacing:.18em;color:#3b3225;border-right:1px solid var(--rule);position:relative}
+.pipe div:last-child{border-right:0}
+.pipe div.done{color:var(--amber-dim);background:#140f09}
+.pipe div.now{color:#0b0a08;background:var(--amber);font-weight:700;animation:pulse 1.6s infinite}
+.tele{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.2em;color:var(--grey);margin-top:6px}
+.pipe div small{display:block;font-size:9px;letter-spacing:.08em;margin-top:2px;opacity:.85}
+.nosignal{border-color:var(--red)!important;color:var(--red)!important;animation:pulse 1.6s infinite}
+.fast{border-color:var(--green);color:var(--green)}
+.crew{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.hand{border:1px solid var(--green);background:var(--panel2);padding:9px 11px}
+.hand .role{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--green)}
+.hand .role .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulse 1.1s infinite}
+.hand .who{font-weight:700;margin:4px 0 2px}
+.hand .clock{float:right;color:#e8d5ad}
+.hand.slow{border-color:var(--amber)}
+td.num{text-align:right;white-space:nowrap}
+.add{color:var(--green)} .del{color:var(--red)}
+.wip{color:var(--green);animation:pulse 1.1s infinite}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script id="run-data" type="application/json">{"state":{"runId":"2026-11-09T01-39-51","target":"/Users/thomasfuhriman/code/portfolio","request":"Update the Shipyard section and run view with the latest Frisson run, and add a way to explain what the Harbor Pilot does. Push when done. Run Shipyard so it can be seen in Claude Desktop.","branch":"shipyard/frisson-run-harbor-explainer-2026-11-09T01-39-51","size":"lite","budgetTokens":null,"stage":"done","cycle":1,"maxCycles":3,"fixRound":1,"maxFixRounds":3,"criteria":{"AC1":"pass","AC2":"pass","AC3":"pass","AC4":"pass","AC5":"pass","AC6":"pass","AC7":"pass","AC8":"pass"},"tasks":{"T1":"done","T1fix":"done"},"deaths":[],"verdict":"shipped","baseCommit":"6c9617fb5e1c96c1e7116053402926d0a613b0f5","startedAt":"2026-11-09T01:39:51Z","endedAt":"2026-11-09T01:55:31Z","stageTimes":{"intake":{"start":"2026-11-09T01:39:51Z","end":"2026-11-09T01:41:30Z"},"survey":{"start":"2026-11-09T01:39:51Z","end":"2026-11-09T01:41:30Z"},"plan":{"start":"2026-11-09T01:41:30Z","end":"2026-11-09T01:41:30Z"},"build":{"start":"2026-11-09T01:41:30Z","end":"2026-11-09T01:47:59Z"},"test":{"start":"2026-11-09T01:47:59Z","end":"2026-11-09T01:54:10Z"},"fix":{"start":"2026-11-09T01:54:10Z","end":"2026-11-09T01:54:26Z"},"report":{"start":"2026-11-09T01:54:26Z","end":"2026-11-09T01:55:31Z"}},"active":[],"fastPaths":["direct-fix","scoped-retest"],"usage":[{"agent":"surveyor-1","role":"surveyor","model":"sonnet","tokens":18482,"toolUses":11,"durationMs":37404},{"agent":"dev-T1","role":"dev","model":"opus","tokens":80037,"toolUses":34,"durationMs":373792},{"agent":"tester-1","role":"tester","model":"sonnet","tokens":58815,"toolUses":8,"durationMs":50705},{"agent":"explorer-1","role":"tester","model":"opus","tokens":93969,"toolUses":37,"durationMs":268177},{"agent":"dev-T1-fix1","role":"dev","model":"sonnet","tokens":6770,"toolUses":3,"durationMs":7627,"fixOf":"T1"},{"agent":"reporter-1","role":"reporter","model":"sonnet","tokens":null,"toolUses":null,"durationMs":null}]},"brief":{"goal":"The portfolio's Shipyard card and its run view (shipyard.html) show the latest real Frisson run, 2026-11-09T01-05-12 (single-crate view), and visitors can find out what the Harbor Pilot does, from a disclosure on the card and from a real review-guide excerpt on the run page.","constraints":["Plain HTML/CSS/JS: no build step and no dependencies, per the README","The run data embedded in shipyard.html stays the real report; the only allowed change is replacing the absolute local path in state.target","Harbor Pilot claims must match the Shipyard README: it is not a reviewer and does not approve, fix or score","Figures quoted about the run come from the run's own report, never estimated"],"assumptions":["Latest Frisson run means the newest run directory in crate-digger/.shipyard/runs, which is 2026-11-09T01-05-12","The two invented demo runs in SHIPYARD_RUNS may stay after the real one","Push means pushing the Shipyard branch; merging to main, which publishes the site, stays with the owner"],"risks":["The newer report template has no viewport meta and may overflow at phone width","A [harbor] tag breaks the sim's padding: it pads with 6 minus the tag length, so tags must be at most 5 characters","Long sim lines can wrap badly on a phone"],"acceptanceCriteria":[{"id":"AC1","statement":"The run-data JSON in shipyard.html has state.runId 2026-11-09T01-05-12, verdict shipped, and 12 criteria all pass","check":"command"},{"id":"AC2","statement":"The run-data JSON equals the source report.html's run-data JSON once state.target is ignored, and shipyard.html contains neither '/Users/' nor 'thomasfuhriman'","check":"command"},{"id":"AC3","statement":"shipyard.html keeps the viewport meta, a back link to index.html#work and an intro naming the single-crate run; the strings 'first run' and '66 files' are gone","check":"command"},{"id":"AC4","statement":"SHIPYARD_RUNS[0] in script.js has an ask containing 'only show the crate you are on', every tag is at most 5 characters, and the static #sim-out fallback in index.html starts with the same command","check":"command"},{"id":"AC5","statement":"The Shipyard card in index.html has a details element whose summary contains 'Harbor Pilot' and whose raw HTML text says it does not approve, fix or score and names /harbor, /harbor ask and /harbor verify","check":"command"},{"id":"AC6","statement":"The raw HTML of shipyard.html has an element with id=\"harbor\" before #app containing the path apps/web/src/router.ts:32-39 and the line path: '/crates/:id(\\\\d+)', as in REVIEW_GUIDE.md S1","check":"command"},{"id":"AC7","statement":"node --check script.js exits 0, the branch's non-.shipyard changes are limited to index.html, shipyard.html, script.js and style.css, and no package.json exists","check":"command"},{"id":"AC8","statement":"Served locally at 1280 and 390 px wide: the Harbor disclosure opens on click, its link lands on shipyard.html#harbor with the section in view, the sim plays the real run first and 'run again' moves to the next run, the report renders with AC12 listed, neither page scrolls horizontally, and the console shows no errors","check":"browser"}]},"map":{"commit":"6c9617fb5e1c96c1e7116053402926d0a613b0f5","structure":"Static site, no build step, no package.json: index.html, shipyard.html, script.js, style.css, assets/, tools/make_ascii.py","tests":{"command":null,"note":"No tests, runner, CI or lint. Syntax check with node --check script.js; everything else is verified by inspecting files and in a browser."},"relevant":{"index.html":"Shipyard card lines 132-172; #sim fallback 154-166; example-run link 169","script.js":"SHIPYARD_RUNS 67-91 (all invented); sim IIFE 93-155; padding is 6 minus tag length","shipyard.html":"Report template plus portfolio wrapper: .pf-* CSS, nav and intro at 120-133; run-data JSON on line 136; no viewport in the raw report template","style.css":"Sim styles from line 271; .project, .tags, .links; variables --amber, --accent"},"harborPilot":"Not mentioned anywhere in the site; new UI and copy needed"},"ledger":"# Ledger 2026-11-09T01-39-51\n- 2026-11-09T01:39:51Z preflight done; branched from 6c9617fb5e1c96c1e7116053402926d0a613b0f5; size lite (requested)\n- 2026-11-09T01:41:30Z survey done (one surveyor; no test command exists). Harbormaster wrote brief and plan (lite). Dispatched dev-T1.\n- 2026-11-09T01:47:59Z dev-T1 done (7e5f38f). Dispatched tester-1.\n- 2026-11-09T01:49:02Z tester-1: 8 of 8 pass, tree clean. Dispatched exploratory pass.\n- 2026-11-09T01:54:10Z exploratory done. Scroll-restore finding not reproduced (AC8 stands). Direct fix for spec's miscount in card copy.\n- 2026-11-09T01:54:26Z fix committed. Re-ran node --check, browser.mjs and a back-link check.\n","reportMd":"# Shipyard run 2026-11-09T01-39-51: shipped, 8 of 8 criteria pass, 1 cycle, 1 fix round\n\nNot merged. The branch is `shipyard/frisson-run-harbor-explainer-2026-11-09T01-39-51`. The owner asked for a push, so it will be pushed. Merging to main publishes the site and stays with the owner.\n\n## What was asked for\n\"Update the Shipyard section and run view with the latest Frisson run, and add a way to explain what the Harbor Pilot does. Push when done. Run Shipyard so it can be seen in Claude Desktop.\"\n\nGoal from the brief: the portfolio's Shipyard card and `shipyard.html` show the latest real Frisson run (2026-11-09T01-05-12, single-crate view). Visitors can learn what the Harbor Pilot does from a disclosure on the card and from a real review-guide excerpt on the run page.\n\n## Acceptance criteria\n| ID | Criterion | Final status |\n|---|---|---|\n| AC1 | Run-data JSON has runId 2026-11-09T01-05-12, verdict shipped, 12 criteria pass | pass |\n| AC2 | Run-data equals the source report's (ignoring `state.target`); no `/Users/` or `thomasfuhriman` in the page | pass |\n| AC3 | Viewport meta, back link to `index.html#work`, single-crate intro; \"first run\" and \"66 files\" gone | pass |\n| AC4 | `SHIPYARD_RUNS[0]` ask text, tags of 5 characters or fewer, `#sim-out` fallback matches | pass |\n| AC5 | Card `\u003cdetails>` about the Harbor Pilot: does not approve, fix or score; names /harbor, /harbor ask, /harbor verify | pass |\n| AC6 | `id=\"harbor\"` section before `#app` with the REVIEW_GUIDE S1 excerpt | pass |\n| AC7 | `node --check script.js` is 0; changes limited to the four allowed files; no `package.json` | pass |\n| AC8 | Browser check at 1280 and 390 px (disclosure, `#harbor` link, sim and \"run again\", report with AC12, no horizontal scroll, no console errors) | pass |\n\n## What was built\n- `index.html`, `shipyard.html`, `script.js` and `style.css` were changed (dev commit 7e5f38f).\n- The real Frisson run is now the first run in the sim and the embedded report.\n- The card has a Harbor Pilot disclosure.\n- `shipyard.html` has a `#harbor` section with a review-guide excerpt.\n- The dev added phone CSS to the `shipyard.html` wrapper, because the newer report template overflowed to 641px at 390px wide.\n- Fix commit 52bf69a corrected the card copy from \"two made-up\" runs to \"three\".\n\n## Tests\n- **Tester:** 8 of 8 pass, tree clean. The repo has no test command, so the checks are greps, `node --check`, and a browser script, `.shipyard/checks/browser.mjs`.\n- **After the fix:** the harbormaster re-ran `node --check script.js` (ok) and `browser.mjs` (PASS AC8, `cycles/1/browser-output-2.txt`). It also confirmed in Chromium that the back link at 390px reaches `index.html#work`, and that `#harbor` still lands correctly after a saved scroll.\n- **Not re-run:** the AC1-AC7 greps, because only one word of `index.html` changed. Their passing status is from the tester's earlier run.\n- **Not tested:** Firefox and Safari.\n\n## What went wrong\n- **Fix outside the criteria.** The harbormaster's spec miscounted the invented demo runs, so the public card said \"two made-up\" when there were three. No criterion covered it. It was caught in the exploratory pass and fixed directly.\n- **Exploratory gaps.** The exploratory pass did not reach the index card at phone width, the back link, or a clean \"run again\" click, and someone else was using the pane. `browser.mjs` covers the card and \"run again\". The back link was checked by hand afterwards.\n- **No deaths, no failed criteria, no extra cycles.**\n\n## Plan changes\n- Playwright was not added to this repo, since the README says no dependencies. The browser check borrows the Playwright already installed in the crate-digger checkout. No owner question was asked.\n- Phone CSS was added to the `shipyard.html` wrapper (see above).\n- The card copy was corrected from two to three (see above).\n\n## Observations for the owner to choose from\n1. **Low:** The saved-scroll restore in the report JS could override `#harbor` on a return visit. The exploratory finding did not reproduce, and the harbormaster's Chromium repro landed correctly. Other browsers are untested.\n2. **Medium:** The report section renders raw markdown rather than formatted text.\n3. **Medium:** Harbormaster (runs the build) and Harbor Pilot (lays out the code) are easily confused by a first-time reader.\n4. **Low:** Stage times sum to 26m56s against a 24m43s wall clock, because fix overlaps test. The run says shipped while its report says nothing merged at the time. The sim says `~/frisson` while the report says crate-digger.\n\nOther dev notes: the sim wraps at 320px, and wide report tables scroll inside themselves on phones.\n\n## Recommended next steps\n1. Look at the pushed branch on a phone and in a second browser (Firefox or Safari) before merging.\n2. Merge to main when satisfied, which publishes the site.\n3. Consider observations 2 and 3 as follow-ups. They affect how a first-time visitor reads the page.\n\n## Token use\n\nSize: lite. Reported total: 258,073 tokens across 6 agents.\n\n| Role | Agents | Tokens | Share |\n|---|---|---|---|\n| tester | 2 | 152,784 | 59% |\n| dev | 2 | 86,807 | 34% |\n| surveyor | 1 | 18,482 | 7% |\n| reporter | 1 | 0 | 0% |\n\n| Agent | Model | Tokens | Tool uses | Seconds |\n|---|---|---|---|---|\n| surveyor-1 | sonnet | 18,482 | 11 | 37 |\n| dev-T1 | opus | 80,037 | 34 | 374 |\n| tester-1 | sonnet | 58,815 | 8 | 51 |\n| explorer-1 | opus | 93,969 | 37 | 268 |\n| dev-T1-fix1 (fix of T1) | sonnet | 6,770 | 3 | 8 |\n| reporter-1 | sonnet | unavailable | - | - |\n\nThe harbormaster's own tokens are not included: no figure was available.\n1 agent(s) reported no figure and count as 0 in the totals, so the real total is higher.\n\n### Dev models across 1 run(s)\n\n| Model | Tasks | Fix agents | Fixes per task | Tokens |\n|---|---|---|---|---|\n| opus | 1 | 1 | 1.00 | 86,807 |\n","cycles":[{"n":"1","spec":"# Spec: latest Frisson run and Harbor Pilot explainer\n\nSource run: /Users/thomasfuhriman/code/crate-digger/.shipyard/runs/2026-11-09T01-05-12 (report.html, report.md, REVIEW_GUIDE.md).\n\n## shipyard.html\nRebuild from the source report.html so it gets the newer template (size and token chips, Token use section). Re-apply the existing portfolio wrapper: viewport meta, title \"Shipyard — Example Run\", .pf-* CSS, nav, intro. Set state.target to ~/code/crate-digger inside the run data and change nothing else in it. Update the intro for this run: the request, 12 of 12 criteria, one fix round, 9 files, about 25 minutes, and the honest story that the exploratory pass caught a sleeve click that only worked on a 5px strip.\n\nAdd a static section id=\"harbor\" between the intro and #app, in the page's own amber style: what the Harbor Pilot does, then step S1 from REVIEW_GUIDE.md quoted exactly (path line, code, What it does, Hands to the next step, When it fails), labelled as a real excerpt from this run's guide (8 steps). It must work without JS.\n\n## index.html, script.js, style.css\nPut the real run first in SHIPYARD_RUNS, with an optional dir field so the sim bar shows ~/frisson for it and ~/your-repo for the others. Keep the two invented runs and correct the comment so it says which is which. Steps, tags at most 5 characters, short enough for a phone:\nplan 2 tasks · 12 criteria | build dev agent → CrateView.vue ok | build dev agent → docs, Playwright ok | test tester agent → 12 of 12 ok | test exploratory → 5px click target bad | fix CrateBox.vue → full sleeve clicks ok | test 686 tests · 12 of 12 ok | ship branch shipped ship | pilot /harbor → 8-step guide ok\nUpdate the static #sim-out fallback to match. Say in the card that the demo replays a real run.\n\nAdd a details disclosure to the card, summary \"What's the Harbor Pilot?\", styled to fit the card: after a build, /harbor lays the real code out in the order the data moves so a person can read it start to finish. It is not a reviewer: it does not approve, fix or score, you are the reviewer. The code can't be paraphrased, because Claude only cites line ranges and a script copies those lines from the commit and refuses citations that don't exist. /harbor ask answers with quoted lines; /harbor verify re-checks every snippet against the branch. Link to shipyard.html#harbor.\n","plan":{"summary":"One dev swaps the run view to the latest Frisson run, replays it in the card's sim, and adds the Harbor Pilot explainer.","tasks":[{"id":"T1","goal":"Show the latest Frisson run and explain the Harbor Pilot","description":"See cycles/1/spec.md.","ownsFiles":["index.html","shipyard.html","script.js","style.css"],"dependsOn":[],"criteriaIds":["AC1","AC2","AC3","AC4","AC5","AC6","AC7","AC8"],"model":"opus"}]},"testReport":{"cycle":1,"verdict":"pass","criteria":{"AC1":{"result":"pass","evidence":"parsed run-data: runId 2026-11-09T01-05-12, verdict shipped, 12 criteria all pass"},"AC2":{"result":"pass","evidence":"JSON equal to source report.html once state.target ignored (target is ~/code/crate-digger); grep finds no /Users/ or thomasfuhriman in shipyard.html"},"AC3":{"result":"pass","evidence":"viewport meta line 5; back link index.html#work line 147; intro names single-crate run on Frisson; 'first run' and '66 files' absent"},"AC4":{"result":"pass","evidence":"SHIPYARD_RUNS[0] ask 'only show the crate you are on'; all tags \u003c=5 chars (max 'build'/'pilot'); #sim-out fallback starts with the same /shipyard command"},"AC5":{"result":"pass","evidence":"details.harbor summary \"What's the Harbor Pilot?\"; body says does not approve, fix or score; names /harbor, /harbor ask, /harbor verify"},"AC6":{"result":"pass","evidence":"section#harbor (line 161) before #app (186); contains apps/web/src/router.ts:32-39 and path: '/crates/:id(\\\\d+)' identical to REVIEW_GUIDE.md line 42"},"AC7":{"result":"pass","evidence":"node --check exit 0; git diff 6c9617f..HEAD files: index.html, script.js, shipyard.html, style.css; no package.json"},"AC8":{"result":"pass","evidence":"/Users/thomasfuhriman/code/portfolio/.shipyard/checks/browser.mjs, output browser-output.txt: all checks ok at 1280 and 390, PASS AC8"}},"observations":[{"severity":"low","text":"Harbor section lands at top=0 after anchor jump; no sticky header overlap measured."}]},"defects":null,"tasks":[]}],"agents":[{"id":"dev-T1-fix1","body":"Changed 'two' to 'three' on index.html line 154. Committed index.html only. No tests exist.\n"},{"id":"dev-T1","body":"# dev-T1 report\n\nCommit: 7e5f38f on shipyard/frisson-run-harbor-explainer-2026-11-09T01-39-51. Files: index.html, shipyard.html, script.js, style.css. No dependencies added. .shipyard/ not committed.\n\n## What changed\n\n- **shipyard.html**: rebuilt from the source report.html by a script kept outside the repo. Wrapper re-applied (viewport, title, .pf-* CSS, nav, intro). state.target is now `~/code/crate-digger`. New static `section#harbor` before #app, with S1 extracted from REVIEW_GUIDE.md by the script and HTML-escaped, not retyped. The script stops if the guide does not have exactly 8 steps.\n- **script.js**: real run first in SHIPYARD_RUNS with optional `dir`; two invented runs kept; comment says which is which. The bar shows `~/frisson` for the real run and `~/your-repo` for the others.\n- **index.html**: fallback matches the real run, a line says the demo replays a real run, new details disclosure linking to shipyard.html#harbor.\n- **style.css**: disclosure styles, sim min-height raised from 7 to 10 lines, smaller sim text and padding at 640px and below.\n\n## Additions beyond the spec\n\n- A `@media (max-width:640px)` block in the shipyard.html wrapper CSS. The newer report overflowed to 641px wide at 390. Wide tables now scroll inside themselves, the stage pipeline wraps, and the body padding is smaller. This overflow was also why #harbor did not land on phones (top 506 at scroll 0); the landing passed once the overflow was fixed.\n- Report template JS is byte-identical to the source (diffed). Only the CSS, wrapper, title, viewport and state.target differ.\n- Figures checked against source: 12/12 and verdict from state.json; 24m43s elapsed (about 25 minutes); 9 files from the guide's file map; 686 = 360 + 326 tests from report.md. Harbor wording checked against ~/code/shipyard/README.md.\n\n## Tests\n\nCheck script: /private/tmp/claude-501/-Users-thomasfuhriman--claude-spares-spare-pHrYKq/3c415b62-0475-494c-8417-4cd47981be05/scratchpad/check.cjs (outside the repo; 47 ok, 0 failed on the final build, output in check-output.txt beside it). It uses crate-digger's Playwright 1.65 and Chromium only, served with python3 http.server on port 8765. Run before the commit, on the same files.\n\n- AC1-AC6: static checks pass. AC2 parses both JSON blocks and compares them without state.target; no '/Users/' or 'thomasfuhriman' in the file.\n- AC7: `node --check script.js` exits 0; commit touches only the four files; no package.json.\n- AC8 at 1280, 390 and 320: real run plays first with ~/frisson; run again moves to the dark mode run with ~/your-repo; disclosure opens on click; link lands with #harbor top at 0; AC12, TOKENS chip and Token use present; documentElement and body scrollWidth within viewport; no console errors. Google Fonts failures would have been filtered from the error check; none were listed.\n- Also passing: #harbor and the sim fallback render with JS disabled.\n- Sim wrap: no wrapping at 390 (10 lines) or 1280.\n\n## Known limits\n\n- At 320px the sim wraps to 14 lines, without a hanging indent. 320 is outside AC8.\n- At 390 the report's wider tables scroll sideways inside themselves, so some columns (such as a task's status) start off screen. The page itself does not scroll.\n- Opening the disclosure at 1280 makes the neighbouring card in the row taller, because the grid row stretches.\n- The sim's reserved 10 lines leave blank space under the shorter invented runs.\n- Firefox and Safari not tested.\n- `.projects` uses minmax(300px, 1fr), which is wider than the 288px content width at 320px. Existing and left alone; body overflow-x hidden masks it.\n\n## Trap checked, no change\n\nThe report template restores a saved scroll position from sessionStorage, which could have beaten the #harbor link after a reader had scrolled down. I tested it in Chromium with and without a guard: the link landed correctly both ways, so I dropped the guard and left the template JS unedited. Not checked in other browsers.\n\n## Wording for review\n\nThe intro's \"One command\" is carried over from the old wrapper; the owner also answered questions before planning in this run. \"Shipped on its own branch\" is used because the source report says nothing was merged or pushed.\n"}],"runDir":".shipyard/runs/2026-11-09T01-39-51","live":false,"stages":["intake","survey","plan","build","test","fix","report","done"],"tree":{"files":[{"path":"index.html","add":25,"del":9,"wip":false},{"path":"script.js","add":22,"del":3,"wip":false},{"path":"shipyard.html","add":87,"del":8,"wip":false},{"path":"style.css","add":15,"del":1,"wip":false}],"total":4},"stateMtime":1794189331493.478,"renderedAt":1794189331567}</script>
+<script>
+const D = JSON.parse(document.getElementById('run-data').textContent);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const el = (h) => { const d = document.createElement('div'); d.innerHTML = h.trim(); return d.firstElementChild; };
+
+const st = D.state || {};
+const verdict = (st.verdict || 'pending').toLowerCase();
+const crit = st.criteria || {};
+const critKeys = Object.keys(crit);
+const statements = {};
+const checks = {};
+(D.brief?.acceptanceCriteria || []).forEach(c => { statements[c.id] = c.statement; checks[c.id] = c.check; });
+const keys = critKeys.length ? critKeys : Object.keys(statements);
+const counts = { pass: 0, fail: 0, untested: 0 };
+keys.forEach(k => { counts[(crit[k] || 'untested')] = (counts[(crit[k] || 'untested')] || 0) + 1; });
+const total = keys.length || 1;
+
+const parts = [];
+
+const nowIdx = D.stages.indexOf(st.stage);
+const T = s => { const t = Date.parse(s); return Number.isFinite(t) ? t : null; };
+const dur = ms => {
+  if (ms == null || ms < 0) return '';
+  const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
+  return h ? `${h}h${String(m).padStart(2, '0')}m` : m ? `${m}m${String(r).padStart(2, '0')}s` : `${r}s`;
+};
+// Elements carrying data-since tick every second, so the page looks alive
+// between renders even while one long agent is working.
+const since = (iso, end) => {
+  const a = T(iso); if (a == null) return '—';
+  const b = T(end);
+  return b != null ? dur(b - a) : `<span data-since="${a}">${dur(Date.now() - a)}</span>`;
+};
+const times = st.stageTimes || {};
+const pipeline = D.stages.filter(s => s !== 'done').map((s, i) => {
+  const cls = D.live && i === nowIdx ? 'now' : (nowIdx > i || !D.live ? 'done' : '');
+  const t = times[s];
+  const clock = t?.start ? `<small>${since(t.start, (D.live && i === nowIdx) ? null : (t.end || null))}</small>` : '';
+  return `<div class="${cls}">${s.toUpperCase()}${clock}</div>`;
+}).join('');
+const quietMs = D.stateMtime ? Date.now() - D.stateMtime : 0;
+const active = Array.isArray(st.active) ? st.active : [];
+const usage = Array.isArray(st.usage) ? st.usage : [];
+const tokenTotal = usage.reduce((sum, u) => sum + (u.tokens ?? 0), 0);
+
+parts.push(`
+<header>
+  <h1>SHIPYARD<small>AUTONOMOUS DEV YARD // ${D.live ? 'YARD ACTIVE' : 'RUN RECORD'}</small></h1>
+  <div class="meta">
+    ${D.live
+      ? '<span class="chip verdict live"><span class="dot"></span>WORKING</span>'
+      : `<span class="chip verdict v-${esc(verdict)}">${esc(verdict)}</span>`}
+    <span class="chip">RUN <b>${esc(st.runId || '—')}</b></span>
+    ${st.size ? `<span class="chip">SIZE <b>${esc(st.size)}</b></span>` : ''}
+    ${usage.length ? `<span class="chip">TOKENS <b>${tokenTotal.toLocaleString('en-US')}</b></span>` : ''}
+    ${st.startedAt ? `<span class="chip">ELAPSED <b>${since(st.startedAt, D.live ? null : st.endedAt)}</b></span>` : ''}
+    ${D.live && active.length ? `<span class="chip live">CREW <b>${active.length}</b></span>` : ''}
+    ${D.live ? `<span class="chip nosignal" id="nosignal" data-mtime="${D.stateMtime}" style="display:none">NO SIGNAL <b></b></span>` : ''}
+    <span class="chip">CYCLE <b>${esc(st.cycle || '?')}/${esc(st.maxCycles || 3)}</b></span>
+    ${st.fixRound ? `<span class="chip">FIX ROUND <b>${esc(st.fixRound)}/${esc(st.maxFixRounds || 3)}</b></span>` : ''}
+    <span class="chip">BRANCH <b>${esc(st.branch || '—')}</b></span>
+    <span class="chip">TARGET <b>${esc(st.target || '—')}</b></span>
+    ${(st.fastPaths || []).map(f => `<span class="chip fast">FAST PATH <b>${esc(f)}</b></span>`).join('')}
+  </div>
+  <div class="pipe">${pipeline}</div>
+  <div class="tele">
+    <span>${D.live ? '◉ TELEMETRY LIVE — REFRESHING EVERY 4s' : '· TRANSMISSION ENDED'}</span>
+    <span>STAGE: ${esc((st.stage || 'unknown').toUpperCase())}</span>
+  </div>
+</header>
+${D.live ? '<div class="scan"><i></i></div>' : ''}
+<div class="hazard"></div>`);
+
+if (D.live && active.length) {
+  parts.push(`<section><h2>Crew on deck — ${active.length} working</h2><div class="body"><div class="crew">
+    ${active.map(a => {
+      const t = T(a.since);
+      const slow = t != null && Date.now() - t > 15 * 60 * 1000;
+      return `<div class="hand${slow ? ' slow' : ''}"><div class="role"><span class="dot"></span>${esc(a.role || 'agent')}<span class="clock">${since(a.since)}</span></div>
+        <div class="who">${esc(a.id || '?')}</div>
+        ${a.task ? `<div class="sub" style="color:var(--grey);font-size:11px">${esc(a.task)}</div>` : ''}</div>`;
+    }).join('')}
+  </div></div></section>`);
+}
+
+if (D.tree && D.tree.total) {
+  const wip = D.tree.files.filter(f => f.wip).length;
+  const rows = D.tree.files.map(f => `<tr>
+      <td class="mono">${f.wip ? '<span class="wip">●</span> ' : ''}${esc(f.path)}</td>
+      <td class="num">${f.add == null ? (f.isNew ? '<span class="add">new</span>' : '') : f.add ? '<span class="add">+' + f.add + '</span>' : ''}</td>
+      <td class="num">${f.del ? '<span class="del">−' + f.del + '</span>' : ''}</td></tr>`).join('');
+  parts.push(`<section><h2>Working tree — ${D.tree.total} file${D.tree.total === 1 ? '' : 's'} changed${wip ? ', ' + wip + ' uncommitted' : ''}</h2><div class="body">
+    <table><thead><tr><th>File ${wip ? '(● = being written)' : ''}</th><th style="text-align:right">Added</th><th style="text-align:right">Removed</th></tr></thead><tbody>${rows}</tbody></table>
+    ${D.tree.total > D.tree.files.length ? '<p class="empty">Showing the first ' + D.tree.files.length + '.</p>' : ''}
+  </div></section>`);
+}
+
+if (st.request || D.brief?.goal) {
+  parts.push(`<section><h2>Work order</h2><div class="body">
+    <pre>${esc(D.brief?.goal || st.request)}</pre>
+    ${(D.brief?.assumptions || []).length ? '<p style="margin:11px 0 4px;color:var(--amber-dim);font-size:11px;letter-spacing:.2em">ASSUMPTIONS MADE</p><ul>' + D.brief.assumptions.map(a => '<li>' + esc(a) + '</li>').join('') + '</ul>' : ''}
+  </div></section>`);
+}
+
+// Acceptance criteria
+const bar = `<div class="bar">
+  <i class="p" style="width:${counts.pass / total * 100}%"></i>
+  <i class="f" style="width:${counts.fail / total * 100}%"></i>
+  <i class="u" style="width:${counts.untested / total * 100}%"></i>
+</div>`;
+const cards = keys.length ? keys.map(k => {
+  const s = crit[k] || 'untested';
+  return `<div class="crit"><span class="id">${esc(k)}</span><span class="st ${esc(s)}">${s === 'pass' ? '◉ PASS' : s === 'fail' ? '✗ FAIL' : '· UNTESTED'}</span>
+    <p>${esc(statements[k] || '')}</p>${checks[k] ? `<span class="tag">${esc(checks[k])}</span>` : ''}</div>`;
+}).join('') : '<p class="empty">No acceptance criteria recorded — intake did not complete.</p>';
+parts.push(`<section><h2>Acceptance criteria — ${counts.pass}/${keys.length || 0} pass</h2><div class="body">${keys.length ? bar : ''}<div class="grid">${cards}</div></div></section>`);
+
+// Token use. The figures come straight from state.json's usage list.
+if (usage.length) {
+  const byRole = {};
+  usage.forEach(u => {
+    const r = byRole[u.role] || (byRole[u.role] = { agents: 0, tokens: 0 });
+    r.agents++;
+    r.tokens += u.tokens ?? 0;
+  });
+  const fmt = n => Number(n).toLocaleString('en-US');
+  const roleRows = Object.entries(byRole).sort((a, b) => b[1].tokens - a[1].tokens).map(([role, r]) =>
+    `<tr><td><b>${esc(role)}</b></td><td class="num">${r.agents}</td><td class="num">${fmt(r.tokens)}</td><td class="num">${tokenTotal ? Math.round(r.tokens / tokenTotal * 100) : 0}%</td></tr>`).join('');
+  const agentRows = usage.map(u =>
+    `<tr><td class="mono">${esc(u.agent)}${u.fixOf ? ' (fix of ' + esc(u.fixOf) + ')' : ''}</td><td>${esc(u.role)}</td><td>${esc(u.model || '—')}</td><td class="num">${u.tokens == null ? 'unavailable' : fmt(u.tokens)}</td><td class="num">${u.toolUses ?? '—'}</td></tr>`).join('');
+  const unknown = usage.filter(u => u.tokens == null).length;
+  const hasHarbormaster = usage.some(u => u.role === 'harbormaster');
+  parts.push(`<section><h2>Token use — ${fmt(tokenTotal)} reported</h2><div class="body">
+    <table><thead><tr><th>Role</th><th style="text-align:right">Agents</th><th style="text-align:right">Tokens</th><th style="text-align:right">Share</th></tr></thead><tbody>${roleRows}</tbody></table>
+    ${hasHarbormaster ? '' : "<p class=\"empty\">The harbormaster's own tokens are not included: no figure was available.</p>"}
+    ${unknown ? '<p class="empty">' + unknown + ' agent(s) reported no figure and count as 0, so the real total is higher.</p>' : ''}
+    <details><summary>Per agent</summary><div class="inner"><table><thead><tr><th>Agent</th><th>Role</th><th>Model</th><th style="text-align:right">Tokens</th><th style="text-align:right">Tool uses</th></tr></thead><tbody>${agentRows}</tbody></table></div></details>
+  </div></section>`);
+}
+
+// Cycles
+(D.cycles || []).forEach(c => {
+  const tasks = (c.plan?.tasks || []);
+  const taskState = st.tasks || {};
+  const rows = tasks.length ? tasks.map(t => {
+    const s = taskState[t.id] || 'todo';
+    return `<tr><td><b>${esc(t.id)}</b></td><td>${esc(t.goal)}${t.model ? ` <span class="tag">${esc(t.model)}</span>` : ''}</td>
+      <td class="mono">${esc((t.ownsFiles || []).join(', '))}</td>
+      <td class="mono">${esc((t.dependsOn || []).join(', ') || '—')}</td>
+      <td><span class="tag t-${esc(s)}">${esc(s)}</span></td></tr>`;
+  }).join('') : '<tr><td colspan="5" class="empty">No plan produced for this cycle.</td></tr>';
+
+  parts.push(`<section><h2>Cycle ${esc(c.n)}</h2><div class="body">
+    <div class="cycle-head"><h3>DELEGATION</h3></div>
+    <table><thead><tr><th>Task</th><th>Goal</th><th>Owns files</th><th>After</th><th>State</th></tr></thead><tbody>${rows}</tbody></table>
+    ${c.spec ? '<details><summary>Manager spec — what it intended to build</summary><div class="inner"><pre>' + esc(c.spec) + '</pre></div></details>' : ''}
+    ${c.testReport ? '<details><summary>Tester verdict + evidence</summary><div class="inner"><pre>' + esc(JSON.stringify(c.testReport, null, 2)) + '</pre></div></details>' : ''}
+    ${c.defects ? '<details><summary>Triaged defects</summary><div class="inner"><pre>' + esc(JSON.stringify(c.defects, null, 2)) + '</pre></div></details>' : ''}
+  </div></section>`);
+});
+
+// Deaths
+if ((st.deaths || []).length) {
+  parts.push(`<section><h2>Agent losses — ${st.deaths.length}</h2><div class="body"><table>
+    <thead><tr><th>Agent</th><th>Reason</th><th>Detail</th></tr></thead><tbody>
+    ${st.deaths.map(d => `<tr><td><b>${esc(d.agentId || d.agent || '?')}</b></td><td class="fail">${esc(d.reason)}</td><td class="mono">${esc(d.detail)}</td></tr>`).join('')}
+    </tbody></table></div></section>`);
+}
+
+if (D.reportMd) {
+  parts.push(`<section><h2>Report</h2><div class="body"><pre>${esc(D.reportMd)}</pre></div></section>`);
+}
+
+if ((D.agents || []).length) {
+  parts.push(`<section><h2>Crew logs — ${D.agents.length} agents</h2><div class="body">
+    ${D.agents.map(a => '<details><summary>' + esc(a.id) + '</summary><div class="inner"><pre>' + esc(a.body) + '</pre></div></details>').join('')}
+  </div></section>`);
+}
+
+if (D.ledger) {
+  parts.push(`<section><h2>Harbormaster log</h2><div class="body"><pre>${esc(D.ledger)}</pre></div></section>`);
+}
+
+parts.push(`<div class="hazard"></div><footer>
+  SHIPYARD // ${esc(D.runDir)}<br>
+  ${D.live
+    ? 'YARD ACTIVE — this page reloads itself. Leave the tab open.'
+    : 'TRANSMISSION ENDED — this page is final and will not reload.'}
+</footer>`);
+document.getElementById('app').innerHTML = parts.join('');
+
+// Tick the clocks between reloads, and raise NO SIGNAL if the harbormaster
+// has not written state.json for a long time while the run claims to be live.
+(function tick(){
+  const fmt = ms => {
+    const s = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
+    return h ? h + 'h' + String(m).padStart(2, '0') + 'm' : m ? m + 'm' + String(r).padStart(2, '0') + 's' : r + 's';
+  };
+  const QUIET = 20 * 60 * 1000;
+  function step(){
+    document.querySelectorAll('[data-since]').forEach(n => { n.textContent = fmt(Date.now() - +n.dataset.since); });
+    const ns = document.getElementById('nosignal');
+    if (ns && +ns.dataset.mtime) {
+      const q = Date.now() - +ns.dataset.mtime;
+      ns.style.display = q > QUIET ? '' : 'none';
+      ns.querySelector('b').textContent = fmt(q);
+    }
+  }
+  step(); setInterval(step, 1000);
+})();
+
+// A meta-refresh is a full reload, which would slam every <details> shut and
+// jump you back to the top mid-read. Persist what the reader opened and where
+// they were, keyed by run so two tabs do not fight. sessionStorage, not local:
+// this is view state, and it should die with the tab.
+(function preserveReadingState(){
+  const KEY = 'shipyard:' + (D.state?.runId || 'run');
+  let saved = {};
+  try { saved = JSON.parse(sessionStorage.getItem(KEY) || '{}') } catch {}
+
+  const summaries = () => [...document.querySelectorAll('details')];
+
+  summaries().forEach(d => {
+    const label = d.querySelector('summary')?.textContent?.trim();
+    if (label && saved.open && saved.open.includes(label)) d.open = true;
+    d.addEventListener('toggle', save);
+  });
+
+  if (typeof saved.scroll === 'number') window.scrollTo(0, saved.scroll);
+
+  function save(){
+    const open = summaries().filter(d => d.open)
+      .map(d => d.querySelector('summary')?.textContent?.trim())
+      .filter(Boolean);
+    try { sessionStorage.setItem(KEY, JSON.stringify({ open, scroll: window.scrollY })) } catch {}
+  }
+
+  let t;
+  window.addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(save, 150) }, { passive: true });
+  window.addEventListener('beforeunload', save);
+})();
+</script>
+</body>
+</html>

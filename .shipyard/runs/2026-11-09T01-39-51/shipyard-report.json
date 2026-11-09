@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "plan": "Update the Shipyard section and run view with the latest Frisson run, and add a way to explain what the Harbor Pilot does. Push when done. Run Shipyard so it can be seen in Claude Desktop.\n\nGoal: The portfolio's Shipyard card and its run view (shipyard.html) show the latest real Frisson run, 2026-11-09T01-05-12 (single-crate view), and visitors can find out what the Harbor Pilot does, from a disclosure on the card and from a real review-guide excerpt on the run page.",
+  "plan_changes": [
+    {
+      "change": "Playwright not added to this repo; no owner question asked",
+      "why": "The README says no dependencies. The browser check borrows the Playwright already installed in the crate-digger checkout."
+    },
+    {
+      "change": "Dev added phone CSS to the shipyard.html wrapper",
+      "why": "The newer report template overflowed to 641px at 390px wide."
+    },
+    {
+      "change": "Card copy corrected from two made-up runs to three, outside the criteria",
+      "why": "The harbormaster spec miscounted the invented runs, so the public copy said something false. No criterion covered it."
+    }
+  ],
+  "files_changed": [
+    {
+      "path": "index.html",
+      "status": "modified"
+    },
+    {
+      "path": "script.js",
+      "status": "modified"
+    },
+    {
+      "path": "shipyard.html",
+      "status": "modified"
+    },
+    {
+      "path": "style.css",
+      "status": "modified"
+    }
+  ],
+  "tests": [
+    {
+      "name": "AC1: The run-data JSON in shipyard.html has state.runId 2026-11-09T01-05-12, verdict shipped, and 12 criteria all pass",
+      "status": "fail",
+      "evidence": "verdict: undefined. parsed run-data: runId 2026-11-09T01-05-12, verdict shipped, 12 criteria all pass"
+    },
+    {
+      "name": "AC2: The run-data JSON equals the source report.html's run-data JSON once state.target is ignored, and shipyard.html contains neither '/Users/' nor 'thomasfuhriman'",
+      "status": "fail",
+      "evidence": "verdict: undefined. JSON equal to source report.html once state.target ignored (target is ~/code/crate-digger); grep finds no /Users/ or thomasfuhriman in shipyard.html"
+    },
+    {
+      "name": "AC3: shipyard.html keeps the viewport meta, a back link to index.html#work and an intro naming the single-crate run; the strings 'first run' and '66 files' are gone",
+      "status": "fail",
+      "evidence": "verdict: undefined. viewport meta line 5; back link index.html#work line 147; intro names single-crate run on Frisson; 'first run' and '66 files' absent"
+    },
+    {
+      "name": "AC4: SHIPYARD_RUNS[0] in script.js has an ask containing 'only show the crate you are on', every tag is at most 5 characters, and the static #sim-out fallback in index.html starts with the same command",
+      "status": "fail",
+      "evidence": "verdict: undefined. SHIPYARD_RUNS[0] ask 'only show the crate you are on'; all tags <=5 chars (max 'build'/'pilot'); #sim-out fallback starts with the same /shipyard command"
+    },
+    {
+      "name": "AC5: The Shipyard card in index.html has a details element whose summary contains 'Harbor Pilot' and whose raw HTML text says it does not approve, fix or score and names /harbor, /harbor ask and /harbor verify",
+      "status": "fail",
+      "evidence": "verdict: undefined. details.harbor summary \"What's the Harbor Pilot?\"; body says does not approve, fix or score; names /harbor, /harbor ask, /harbor verify"
+    },
+    {
+      "name": "AC6: The raw HTML of shipyard.html has an element with id=\"harbor\" before #app containing the path apps/web/src/router.ts:32-39 and the line path: '/crates/:id(\\\\d+)', as in REVIEW_GUIDE.md S1",
+      "status": "fail",
+      "evidence": "verdict: undefined. section#harbor (line 161) before #app (186); contains apps/web/src/router.ts:32-39 and path: '/crates/:id(\\\\d+)' identical to REVIEW_GUIDE.md line 42"
+    },
+    {
+      "name": "AC7: node --check script.js exits 0, the branch's non-.shipyard changes are limited to index.html, shipyard.html, script.js and style.css, and no package.json exists",
+      "status": "fail",
+      "evidence": "verdict: undefined. node --check exit 0; git diff 6c9617f..HEAD files: index.html, script.js, shipyard.html, style.css; no package.json"
+    },
+    {
+      "name": "AC8: Served locally at 1280 and 390 px wide: the Harbor disclosure opens on click, its link lands on shipyard.html#harbor with the section in view, the sim plays the real run first and 'run again' moves to the next run, the report renders with AC12 listed, neither page scrolls horizontally, and the console shows no errors",
+      "status": "fail",
+      "evidence": "verdict: undefined. /Users/thomasfuhriman/code/portfolio/.shipyard/checks/browser.mjs, output browser-output.txt: all checks ok at 1280 and 390, PASS AC8"
+    }
+  ],
+  "branch": "shipyard/frisson-run-harbor-explainer-2026-11-09T01-39-51",
+  "base": "6c9617fb5e1c96c1e7116053402926d0a613b0f5",
+  "notes": [
+    "Dev: sim wraps at 320px; wide report tables scroll inside themselves on phones; Firefox and Safari untested.",
+    "Exploratory pass did not get to the index card at phone width, the back link, or a clean run-again click; someone else was also using the pane. browser.mjs covers the first and last."
+  ]
+}

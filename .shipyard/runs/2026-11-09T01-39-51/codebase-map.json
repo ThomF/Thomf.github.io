@@ -1,0 +1,4 @@
+{"commit":"6c9617fb5e1c96c1e7116053402926d0a613b0f5","structure":"Static site, no build step, no package.json: index.html, shipyard.html, script.js, style.css, assets/, tools/make_ascii.py",
+"tests":{"command":null,"note":"No tests, runner, CI or lint. Syntax check with node --check script.js; everything else is verified by inspecting files and in a browser."},
+"relevant":{"index.html":"Shipyard card lines 132-172; #sim fallback 154-166; example-run link 169","script.js":"SHIPYARD_RUNS 67-91 (all invented); sim IIFE 93-155; padding is 6 minus tag length","shipyard.html":"Report template plus portfolio wrapper: .pf-* CSS, nav and intro at 120-133; run-data JSON on line 136; no viewport in the raw report template","style.css":"Sim styles from line 271; .project, .tags, .links; variables --amber, --accent"},
+"harborPilot":"Not mentioned anywhere in the site; new UI and copy needed"}
