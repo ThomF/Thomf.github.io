@@ -1,6 +1,6 @@
 {
   "runId": "2026-11-09T01-39-51",
-  "target": "/Users/thomasfuhriman/code/portfolio",
+  "target": "~/code/portfolio",
   "request": "Update the Shipyard section and run view with the latest Frisson run, and add a way to explain what the Harbor Pilot does. Push when done. Run Shipyard so it can be seen in Claude Desktop.",
   "branch": "shipyard/frisson-run-harbor-explainer-2026-11-09T01-39-51",
   "size": "lite",

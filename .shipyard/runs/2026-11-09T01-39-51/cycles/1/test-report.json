@@ -6,5 +6,5 @@
 "AC5":{"result":"pass","evidence":"details.harbor summary \"What's the Harbor Pilot?\"; body says does not approve, fix or score; names /harbor, /harbor ask, /harbor verify"},
 "AC6":{"result":"pass","evidence":"section#harbor (line 161) before #app (186); contains apps/web/src/router.ts:32-39 and path: '/crates/:id(\\\\d+)' identical to REVIEW_GUIDE.md line 42"},
 "AC7":{"result":"pass","evidence":"node --check exit 0; git diff 6c9617f..HEAD files: index.html, script.js, shipyard.html, style.css; no package.json"},
-"AC8":{"result":"pass","evidence":"/Users/thomasfuhriman/code/portfolio/.shipyard/checks/browser.mjs, output browser-output.txt: all checks ok at 1280 and 390, PASS AC8"}},
+"AC8":{"result":"pass","evidence":".shipyard/checks/browser.mjs, output browser-output.txt: all checks ok at 1280 and 390, PASS AC8"}},
 "observations":[{"severity":"low","text":"Harbor section lands at top=0 after anchor jump; no sticky header overlap measured."}]}

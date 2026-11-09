@@ -1,6 +1,6 @@
 # Spec: latest Frisson run and Harbor Pilot explainer
 
-Source run: /Users/thomasfuhriman/code/crate-digger/.shipyard/runs/2026-11-09T01-05-12 (report.html, report.md, REVIEW_GUIDE.md).
+Source run: ~/code/crate-digger/.shipyard/runs/2026-11-09T01-05-12 (report.html, report.md, REVIEW_GUIDE.md).
 
 ## shipyard.html
 Rebuild from the source report.html so it gets the newer template (size and token chips, Token use section). Re-apply the existing portfolio wrapper: viewport meta, title "Shipyard — Example Run", .pf-* CSS, nav, intro. Set state.target to ~/code/crate-digger inside the run data and change nothing else in it. Update the intro for this run: the request, 12 of 12 criteria, one fix round, 9 files, about 25 minutes, and the honest story that the exploratory pass caught a sleeve click that only worked on a 5px strip.

@@ -14,5 +14,5 @@
 - Tokens: 180,494 across 6 agents (size lite, harbormaster's own tokens not included).
 - Deaths: none. Fast paths: survey-by-harbormaster, direct-fix, scoped-retest
 - Public-site rule: the swapped run data redacts the dev login, an owner email and local paths. Run the sensitive-string scan on run artifacts before committing, and never quote the patterns in a brief.
-- .shipyard/checks/browser.mjs is stale and fails; example-run.check.mjs replaces it
+- .shipyard/checks/browser.mjs was stale and has since been removed at the owner's request; example-run.check.mjs replaces it
 - Pushed to main at the owner's request

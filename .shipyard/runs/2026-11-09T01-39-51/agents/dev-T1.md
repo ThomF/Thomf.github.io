@@ -17,7 +17,7 @@ Commit: 7e5f38f on shipyard/frisson-run-harbor-explainer-2026-11-09T01-39-51. Fi
 
 ## Tests
 
-Check script: /private/tmp/claude-501/-Users-thomasfuhriman--claude-spares-spare-pHrYKq/3c415b62-0475-494c-8417-4cd47981be05/scratchpad/check.cjs (outside the repo; 47 ok, 0 failed on the final build, output in check-output.txt beside it). It uses crate-digger's Playwright 1.65 and Chromium only, served with python3 http.server on port 8765. Run before the commit, on the same files.
+Check script: [temp] (outside the repo; 47 ok, 0 failed on the final build, output in check-output.txt beside it). It uses crate-digger's Playwright 1.65 and Chromium only, served with python3 http.server on port 8765. Run before the commit, on the same files.
 
 - AC1-AC6: static checks pass. AC2 parses both JSON blocks and compares them without state.target; no '/Users/' or 'thomasfuhriman' in the file.
 - AC7: `node --check script.js` exits 0; commit touches only the four files; no package.json.

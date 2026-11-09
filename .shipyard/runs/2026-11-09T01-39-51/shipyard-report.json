@@ -72,7 +72,7 @@
     {
       "name": "AC8: Served locally at 1280 and 390 px wide: the Harbor disclosure opens on click, its link lands on shipyard.html#harbor with the section in view, the sim plays the real run first and 'run again' moves to the next run, the report renders with AC12 listed, neither page scrolls horizontally, and the console shows no errors",
       "status": "fail",
-      "evidence": "verdict: undefined. /Users/thomasfuhriman/code/portfolio/.shipyard/checks/browser.mjs, output browser-output.txt: all checks ok at 1280 and 390, PASS AC8"
+      "evidence": "verdict: undefined. .shipyard/checks/browser.mjs, output browser-output.txt: all checks ok at 1280 and 390, PASS AC8"
     }
   ],
   "branch": "shipyard/frisson-run-harbor-explainer-2026-11-09T01-39-51",
