@@ -63,21 +63,21 @@ document.querySelectorAll(".label, .window, .project, .chips, .contact__line").f
 // ── Shipyard demo terminal ─────────────────────────────────────
 // A scripted replay: nothing here talks to a server.
 // The first run is real, condensed from Shipyard's report for the Frisson
-// run 2026-11-09T01-05-12 (shipyard.html). The other two are invented examples.
+// run 2026-11-09T06-16-12 (shipyard.html). The other two are invented examples.
 // Each run: optional dir (default ~/your-repo), the feature request, then
 // [tag, text, result] steps. Tags are at most 5 characters, or the padding breaks.
 // result: "ok" ✓, "bad" ✗, "ship" ↗, or "" for none.
 const SHIPYARD_RUNS = [
-  { dir: "~/frisson", ask: "only show the crate you are on", steps: [
-    ["plan",  "2 tasks · 12 criteria", ""],
-    ["build", "dev agent → CrateView.vue", "ok"],
-    ["build", "dev agent → docs, Playwright", "ok"],
-    ["test",  "tester agent → 12 of 12", "ok"],
-    ["test",  "exploratory → 5px click target", "bad"],
-    ["fix",   "CrateBox.vue → full sleeve clicks", "ok"],
-    ["test",  "686 tests · 12 of 12", "ok"],
+  { dir: "~/frisson", ask: "add an admin panel", steps: [
+    ["plan",  "3 tasks · 12 criteria", ""],
+    ["build", "dev agent → admin API", "ok"],
+    ["build", "dev agent → dev admin login", "ok"],
+    ["build", "dev agent → /admin panel", "ok"],
+    ["test",  "tester agent → 828 tests", "ok"],
+    ["test",  "browser agent → 99 steps", "ok"],
+    ["test",  "12 of 12 criteria", "ok"],
     ["ship",  "branch shipped", "ship"],
-    ["pilot", "/harbor → 8-step guide", "ok"],
+    ["pilot", "/harbor → 19-step guide", "ok"],
   ]},
   { ask: "add dark mode toggle", steps: [
     ["plan",  "3 tasks · 2 files", ""],
