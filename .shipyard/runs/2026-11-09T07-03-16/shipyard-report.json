@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "plan": "replace the current portfolio shipyard run and harbor pilot example with run 2026-11-09T06-16-12; commit and push to main\n\nGoal: The portfolio's Shipyard example (shipyard.html run data, Harbor excerpt, intro, and the index.html/script.js terminal replay) shows Frisson admin-panel run 2026-11-09T06-16-12 instead of 2026-11-09T01-05-12, with credentials and personal details redacted because the site is public.",
+  "plan_changes": [
+    {
+      "change": "Generated a Harbor guide for the source run before swapping the excerpt",
+      "why": "Run 06-16-12 had no REVIEW_GUIDE.md, and the page promises a real excerpt"
+    },
+    {
+      "change": "Added redaction of the dev login, an owner email and local paths to the swapped run data",
+      "why": "The site and repo are public, and the run text holds a working dev credential"
+    },
+    {
+      "change": "AC2's [local-path pattern] scan made case-sensitive",
+      "why": "A case-insensitive match flags the API route /api/users/, which is not a local path"
+    },
+    {
+      "change": "AC2 reworded to describe the forbidden strings instead of quoting them",
+      "why": "The checklist tester noticed the brief itself listed the patterns, which would have published the credential. Caught before any run artifact was committed."
+    }
+  ],
+  "files_changed": [
+    {
+      "path": "index.html",
+      "status": "modified"
+    },
+    {
+      "path": "script.js",
+      "status": "modified"
+    },
+    {
+      "path": "shipyard.html",
+      "status": "modified"
+    }
+  ],
+  "tests": [
+    {
+      "name": "AC1: Parsing the run-data block in shipyard.html and the one in the source report (with redaction applied to the source's string values) gives deep-equal objects, and state.runId is 2026-11-09T06-16-12, verdict shipped, state.target ~/code/crate-digger.",
+      "status": "pass",
+      "evidence": "Walked source vs page run-data: exactly 30 differing leaves, no key or length differences. Each is a word-level swap of the dev email, owner email or domain, absolute path to ~, or the password value (dev-email/password pair with a slash included). The file path components/admin/admin-panel.css and other paths are intact. state.runId is 2026-11-09T06-16-12, verdict shipped, target ~/code/crate-digger."
+    },
+    {
+      "name": "AC2: A scan of all files changed on the branch finds none of: the dev login email, the owner's email or email domain, an absolute local path, or any text giving the dev account's password value. shipyard.html, index.html and script.js also do not contain the old run id 2026-11-09T01-05-12. The patterns live outside the repo, so this criterion does not publish them. File paths and the words for the admin role, route, panel and username remain.",
+      "status": "pass",
+      "evidence": "Harbormaster scan by command after scrubbing run artifacts: no sensitive match across 20 changed files or the commit messages; the old run id is absent from the three site files. The pattern list is kept outside the repo."
+    },
+    {
+      "name": "AC3: shipyard.html's template differs from the source report's only by the portfolio wrapper (viewport meta, title, pf- CSS and phone layout, nav, intro, Harbor section); it has the browserReport details line, so the browser tester's evidence renders.",
+      "status": "pass",
+      "evidence": "diff of both templates with run-data masked shows only viewport meta, title, pf- CSS and phone media query, nav, intro, Harbor section. browserReport details line present in both."
+    },
+    {
+      "name": "AC4: The shipyard.html intro names the admin panel run, quotes the request without the login, and states 12 of 12 criteria, 37 files, about 44 minutes, no fix rounds, and that login details and an email address are redacted. No text in the wrapper mentions single-crate, 5px or sleeve. The wrapper comment states what was redacted.",
+      "status": "pass",
+      "evidence": "Intro names admin panel run, quotes request ending at 'verified tag!)' with no login, states 12 of 12, 37 files, about 44 minutes, no fix rounds, login details and email redacted. Wrapper comment states redaction. Only 5px hit is pre-existing CSS padding:5px 10px (present at base), not text."
+    },
+    {
+      "name": "AC5: The Harbor figure's title is S5: One guard covers every admin route, the path is apps/api/src/routes/admin.ts:33-39, its caption says step 5 of 19, and its code (HTML-unescaped) is byte-identical to the S5 snippet in the run's REVIEW_GUIDE.md, as are its three bullets' text.",
+      "status": "pass",
+      "evidence": "Script: title S5: One guard covers every admin route, path admin.ts:33-39, caption step 5 of 19 (guide has 19 steps), unescaped code === guide S5 snippet, 3 bullets equal."
+    },
+    {
+      "name": "AC6: SHIPYARD_RUNS[0] in script.js and the static fallback in index.html show the same lines: ask 'add an admin panel', dir ~/frisson, 3 tasks and 12 criteria, three dev agents, 828 tests, 99 browser steps, 12 of 12, branch shipped, /harbor 19-step guide. All tags are at most 5 characters. Three made-up runs remain. The script.js comment names the new run. node --check script.js exits 0.",
+      "status": "pass",
+      "evidence": "Diffed script.js and index.html: ask, ~/frisson, 3 tasks 12 criteria, 3 dev agents, 828 tests, 99 steps, 12 of 12, branch shipped, 19-step guide match. Tags plan/build/test/ship/pilot/fix all <=5. Three made-up runs remain. Comment names 06-16-12. node --check exit 0."
+    },
+    {
+      "name": "AC8: git diff --name-only <baseCommit> HEAD outside .shipyard/ lists exactly shipyard.html, index.html and script.js.",
+      "status": "pass",
+      "evidence": "git diff --name-only 725089233e5c... HEAD lists exactly index.html, script.js, shipyard.html."
+    },
+    {
+      "name": "AC7: In a real browser at 1280 and 390 px wide against a local server: the terminal plays the admin panel run first and Run again moves to a made-up run; the Harbor disclosure opens and its link lands with #harbor in view; shipyard.html renders verdict shipped, AC12, and the browser tester evidence panel; neither page scrolls horizontally; no console errors.",
+      "status": "pass",
+      "evidence": "example-run.check.mjs printed PASS AC7 at 1280 and 390: admin panel run first, [pilot] reached, #sim-dir ~/frisson, Run again -> add dark mode toggle, harbor closed then opens, link lands on shipyard.html#harbor in view, shipped/AC12/run id/Browser tester verdict present, no hscroll on either page, no console errors; 390px harbor code blocks within 34-356px of 390."
+    }
+  ],
+  "branch": "shipyard/swap-example-admin-run-2026-11-09T07-03-16",
+  "base": "725089233e5c66f15e07ccf45b4c1c076c50c44e",
+  "notes": [
+    "Harbor guide built from the logic files' context ranges rather than the whole 311 KB context: tests, CSS and docs were classified as plumbing from their paths. /harbor verify passed all 48 snippets.",
+    "No surveyor: the harbormaster wrote the small map directly from the three files already read, since a repo this small needs no agent."
+  ]
+}

@@ -1,0 +1,4 @@
+ index.html    | 18 +++++++++---------
+ script.js     | 20 ++++++++++----------
+ shipyard.html | 41 +++++++++++++++++++++--------------------
+ 3 files changed, 40 insertions(+), 39 deletions(-)

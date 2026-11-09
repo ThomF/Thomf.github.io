@@ -1,0 +1,19 @@
+{
+ "round": 1,
+ "defects": [
+  {
+   "criterion": "AC1",
+   "summary": "The password rule for the [slash-form credential] form also matched the file path components/admin/admin-panel.css, mangling a path in tree.files.",
+   "owner": "T1",
+   "file": "shipyard.html",
+   "attempts": []
+  },
+  {
+   "criterion": "AC2",
+   "summary": "Same mangled path. The scan's literal also matched legitimate paths, so the criterion was reworded; no credential was found.",
+   "owner": "T1",
+   "file": "shipyard.html",
+   "attempts": []
+  }
+ ]
+}

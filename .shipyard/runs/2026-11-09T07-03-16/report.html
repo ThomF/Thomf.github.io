@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<title>SHIPYARD // 2026-11-09T07-03-16</title>
+<style>
+:root{
+  --bg:#0b0a08; --panel:#15120d; --panel2:#1d1812;
+  --amber:#ffb53d; --amber-dim:#8a6224; --amber-glow:rgba(255,181,61,.25);
+  --green:#7ddba0; --red:#ff6b4a; --grey:#6b6354;
+  --rule:#3a3024;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);}
+body{
+  font-family:"SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  color:var(--amber); font-size:13px; line-height:1.55;
+  padding:24px; max-width:1180px; margin:0 auto;
+  text-shadow:0 0 1px var(--amber-glow);
+}
+/* CRT scanlines */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:99;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.22) 2px 4px);
+}
+body::after{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:98;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%);
+}
+a{color:var(--amber)}
+.hazard{height:8px;background:repeating-linear-gradient(45deg,var(--amber-dim) 0 10px,#0b0a08 10px 20px);margin:14px 0;opacity:.6}
+header{border:2px solid var(--amber-dim);background:var(--panel);padding:14px 16px;position:relative}
+header h1{margin:0;font-size:22px;letter-spacing:.42em;font-weight:700}
+header h1 small{letter-spacing:.1em;font-size:11px;color:var(--amber-dim);display:block;margin-top:6px}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.chip{border:1px solid var(--rule);background:var(--panel2);padding:3px 9px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-dim)}
+.chip b{color:var(--amber);font-weight:600}
+.verdict{border-width:2px;padding:4px 12px;font-weight:700;letter-spacing:.2em}
+.v-shipped{border-color:var(--green);color:var(--green)}
+.v-failed{border-color:var(--red);color:var(--red)}
+.v-partial,.v-pending{border-color:var(--amber);color:var(--amber)}
+section{border:1px solid var(--rule);background:var(--panel);margin:18px 0}
+section>h2{
+  margin:0;padding:8px 14px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;
+  background:var(--panel2);border-bottom:1px solid var(--rule);color:var(--amber-dim);
+}
+section>.body{padding:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.crit{border:1px solid var(--rule);padding:9px 11px;background:var(--panel2)}
+.crit .id{font-weight:700;letter-spacing:.14em}
+.crit .st{float:right;font-size:11px;letter-spacing:.14em}
+.pass{color:var(--green)} .fail{color:var(--red)} .untested{color:var(--grey)}
+.crit p{margin:6px 0 0;color:#d9c9a6;font-size:12px}
+.bar{height:16px;border:1px solid var(--rule);background:#0c0a07;display:flex;margin-bottom:14px}
+.bar i{display:block;height:100%}
+.bar i.p{background:var(--green)} .bar i.f{background:var(--red)} .bar i.u{background:#2a2419}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{color:var(--amber-dim);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+td.mono{color:#d9c9a6}
+.tag{border:1px solid var(--rule);padding:1px 6px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-dim)}
+.t-done{border-color:var(--green);color:var(--green)}
+.t-blocked{border-color:var(--red);color:var(--red)}
+pre{background:#0c0a07;border:1px solid var(--rule);padding:11px;overflow:auto;white-space:pre-wrap;word-break:break-word;color:#d9c9a6;font-size:12px;margin:0}
+details{border:1px solid var(--rule);background:var(--panel2);margin:7px 0}
+details>summary{padding:7px 11px;cursor:pointer;letter-spacing:.14em;font-size:11px;text-transform:uppercase;color:var(--amber-dim)}
+details[open]>summary{border-bottom:1px solid var(--rule);color:var(--amber)}
+details .inner{padding:11px}
+.cycle-head{display:flex;align-items:center;gap:12px;margin:0 0 10px}
+.cycle-head h3{margin:0;font-size:13px;letter-spacing:.26em}
+.empty{color:var(--grey);font-style:italic}
+footer{color:var(--grey);font-size:11px;letter-spacing:.14em;text-align:center;padding:18px 0}
+@media print{body::before,body::after{display:none}}
+
+/* ── live telemetry ─────────────────────────────────────── */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(420%)}}
+@keyframes flicker{0%,100%{opacity:1}97%{opacity:1}98%{opacity:.82}99%{opacity:1}}
+header{animation:flicker 7s infinite}
+.live{border-color:var(--green)!important;color:var(--green)!important}
+.live .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:7px;animation:pulse 1.1s infinite;box-shadow:0 0 6px var(--green)}
+.scan{position:relative;overflow:hidden;height:3px;background:#0c0a07;border:1px solid var(--rule);border-left:0;border-right:0;margin:0}
+.scan i{position:absolute;top:0;left:0;height:100%;width:24%;background:linear-gradient(90deg,transparent,var(--amber),transparent);animation:sweep 2.4s linear infinite}
+/* stage pipeline */
+.pipe{display:flex;gap:0;margin:12px 0 2px;border:1px solid var(--rule);background:#0c0a07}
+.pipe div{flex:1;text-align:center;padding:7px 2px;font-size:10px;letter-spacing:.18em;color:#3b3225;border-right:1px solid var(--rule);position:relative}
+.pipe div:last-child{border-right:0}
+.pipe div.done{color:var(--amber-dim);background:#140f09}
+.pipe div.now{color:#0b0a08;background:var(--amber);font-weight:700;animation:pulse 1.6s infinite}
+.tele{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.2em;color:var(--grey);margin-top:6px}
+.pipe div small{display:block;font-size:9px;letter-spacing:.08em;margin-top:2px;opacity:.85}
+.nosignal{border-color:var(--red)!important;color:var(--red)!important;animation:pulse 1.6s infinite}
+.fast{border-color:var(--green);color:var(--green)}
+.crew{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.hand{border:1px solid var(--green);background:var(--panel2);padding:9px 11px}
+.hand .role{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--green)}
+.hand .role .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulse 1.1s infinite}
+.hand .who{font-weight:700;margin:4px 0 2px}
+.hand .clock{float:right;color:#e8d5ad}
+.hand.slow{border-color:var(--amber)}
+td.num{text-align:right;white-space:nowrap}
+.add{color:var(--green)} .del{color:var(--red)}
+.wip{color:var(--green);animation:pulse 1.1s infinite}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script id="run-data" type="application/json">{"state":{"runId":"2026-11-09T07-03-16","target":"~/code/portfolio","request":"replace the current portfolio shipyard run and harbor pilot example with run 2026-11-09T06-16-12; commit and push to main","branch":"shipyard/swap-example-admin-run-2026-11-09T07-03-16","size":"lite","budgetTokens":null,"stage":"done","cycle":1,"maxCycles":3,"fixRound":2,"maxFixRounds":3,"criteria":{"AC1":"pass","AC2":"pass","AC3":"pass","AC4":"pass","AC5":"pass","AC6":"pass","AC7":"pass","AC8":"pass"},"tasks":{"T1":"done"},"deaths":[],"verdict":"shipped","baseCommit":"725089233e5c66f15e07ccf45b4c1c076c50c44e","startedAt":"2026-11-09T07:03:16Z","endedAt":"2026-11-09T07:13:26Z","stageTimes":{"survey":{"start":"2026-11-09T07:03:16Z","end":"2026-11-09T07:06:11Z"},"intake":{"start":"2026-11-09T07:03:16Z","end":"2026-11-09T07:06:11Z"},"plan":{"start":"2026-11-09T07:06:11Z","end":"2026-11-09T07:06:11Z"},"build":{"start":"2026-11-09T07:06:11Z","end":"2026-11-09T07:07:43Z"},"test":{"start":"2026-11-09T07:07:43Z","end":"2026-11-09T07:12:32Z"},"fix":{"start":"2026-11-09T07:09:56Z","end":"2026-11-09T07:12:32Z"},"report":{"start":"2026-11-09T07:12:32Z","end":"2026-11-09T07:13:26Z"}},"active":[],"fastPaths":["survey-by-harbormaster","direct-fix","scoped-retest"],"usage":[{"agent":"dev-T1","role":"dev","model":"sonnet","tokens":28517,"toolUses":10,"durationMs":67677},{"agent":"browser-tester","role":"browser-tester","model":"sonnet","tokens":54849,"toolUses":7,"durationMs":48187},{"agent":"tester","role":"tester","model":"sonnet","tokens":39915,"toolUses":18,"durationMs":97280},{"agent":"dev-T1-fix1","role":"dev","model":"sonnet","tokens":14525,"toolUses":6,"durationMs":28308,"fixOf":"T1"},{"agent":"tester-2","role":"tester","model":"sonnet","tokens":26319,"toolUses":8,"durationMs":45285},{"agent":"reporter","role":"reporter","model":"sonnet","tokens":16369,"toolUses":11,"durationMs":22639}]},"brief":{"goal":"The portfolio's Shipyard example (shipyard.html run data, Harbor excerpt, intro, and the index.html/script.js terminal replay) shows Frisson admin-panel run 2026-11-09T06-16-12 instead of 2026-11-09T01-05-12, with credentials and personal details redacted because the site is public.","constraints":["Only shipyard.html, index.html and script.js change, apart from run artifacts under .shipyard/.","Run data comes from the source report's run-data block by script, never retyped; only the listed redactions differ.","The literal dev login, the owner's .env email and absolute local paths must not be committed anywhere in this repo, including run artifacts.","The three made-up terminal examples stay.","Old run artifacts under .shipyard/runs stay."],"assumptions":["'Replace' means the single example on the site, not removing old run records.","Redaction is wanted even though not requested: the site and repo are public and the login is a working credential on any database carrying that row. The page says the details are redacted.","The Harbor excerpt comes from a guide generated for this run, because none existed. The guide stays in crate-digger, git-excluded, as earlier runs' guides do."],"risks":["A missed credential variant in 114 KB of JSON text.","Over-redacting the word admin, which is also the feature name, role and route.","The page claiming facts that belong to the old run."],"acceptanceCriteria":[{"id":"AC1","statement":"Parsing the run-data block in shipyard.html and the one in the source report (with redaction applied to the source's string values) gives deep-equal objects, and state.runId is 2026-11-09T06-16-12, verdict shipped, state.target ~/code/crate-digger.","check":"command"},{"id":"AC2","statement":"A scan of all files changed on the branch finds none of: the dev login email, the owner's email or email domain, an absolute local path, or any text giving the dev account's password value. shipyard.html, index.html and script.js also do not contain the old run id 2026-11-09T01-05-12. The patterns live outside the repo, so this criterion does not publish them. File paths and the words for the admin role, route, panel and username remain.","check":"command"},{"id":"AC3","statement":"shipyard.html's template differs from the source report's only by the portfolio wrapper (viewport meta, title, pf- CSS and phone layout, nav, intro, Harbor section); it has the browserReport details line, so the browser tester's evidence renders.","check":"command"},{"id":"AC4","statement":"The shipyard.html intro names the admin panel run, quotes the request without the login, and states 12 of 12 criteria, 37 files, about 44 minutes, no fix rounds, and that login details and an email address are redacted. No text in the wrapper mentions single-crate, 5px or sleeve. The wrapper comment states what was redacted.","check":"command"},{"id":"AC5","statement":"The Harbor figure's title is S5: One guard covers every admin route, the path is apps/api/src/routes/admin.ts:33-39, its caption says step 5 of 19, and its code (HTML-unescaped) is byte-identical to the S5 snippet in the run's REVIEW_GUIDE.md, as are its three bullets' text.","check":"command"},{"id":"AC6","statement":"SHIPYARD_RUNS[0] in script.js and the static fallback in index.html show the same lines: ask 'add an admin panel', dir ~/frisson, 3 tasks and 12 criteria, three dev agents, 828 tests, 99 browser steps, 12 of 12, branch shipped, /harbor 19-step guide. All tags are at most 5 characters. Three made-up runs remain. The script.js comment names the new run. node --check script.js exits 0.","check":"command"},{"id":"AC7","statement":"In a real browser at 1280 and 390 px wide against a local server: the terminal plays the admin panel run first and Run again moves to a made-up run; the Harbor disclosure opens and its link lands with #harbor in view; shipyard.html renders verdict shipped, AC12, and the browser tester evidence panel; neither page scrolls horizontally; no console errors.","check":"browser"},{"id":"AC8","statement":"git diff --name-only \u003cbaseCommit> HEAD outside .shipyard/ lists exactly shipyard.html, index.html and script.js.","check":"command"}]},"map":{"commit":"725089233e5c66f15e07ccf45b4c1c076c50c44e","structure":{"kind":"static site, no build step","files":["index.html","script.js","style.css","shipyard.html"]},"tests":{"runner":"none","command":"node --check script.js","browser":"Playwright borrowed from ~/code/crate-digger/node_modules, as .shipyard/checks/browser.mjs does"},"relevant":{"shipyard.html":"report template plus portfolio wrapper: nav, pf-intro, section#harbor, run-data script block at line 187","script.js":"SHIPYARD_RUNS lines 63-105","index.html":"card copy line 154, fallback log lines 159-171"}},"ledger":"# Ledger 2026-11-09T07-03-16\n- 2026-11-09T07:03:16Z preflight: branched from 725089233e5c66f15e07ccf45b4c1c076c50c44e. Size lite (requested). Owner asked for commit and push to main at the end.\n- 07:07:43Z dev-T1 done (94932f3). Testers dispatched. No token figure was given for dev-T1.\n- 07:09:56Z tester: AC1 and AC2 fail on a mangled file path. AC2's scan also over-matched, and the brief quoted the forbidden strings; both reworded. Direct fix round 1.\n- 07:12:32Z tester-2: AC1 pass. AC2 failed only on run artifacts; harbormaster scrubbed them and the scan by command passed. Stale browser.mjs fails as expected. Entering report.\n","reportMd":"# Run report 2026-11-09T07-03-16: Shipyard example swapped to the admin panel run\n\n**Verdict: shipped. All 8 acceptance criteria pass after one direct fix round.**\n\n## What the owner needs to know first\n\na) **The page is redacted, and you did not ask for that.** The run text contained a working dev login (email plus password) and an owner email. The site and repo are public, so they were redacted, along with absolute local paths. The page says the details are redacted. File paths and the words admin (role, route, panel, username) are kept.\n\nb) **A Harbor guide was generated for the source run, because none existed.** It was built from the logic files' context ranges, not the whole 311 KB context. Tests, CSS and docs were classed as plumbing from their paths. `/harbor verify` passed all 48 snippets. The guide stays in crate-digger, git-excluded, as earlier runs' guides do. The excerpt on the page is step S5 of 19.\n\nc) **This was pushed to main, because you asked.** A normal run is not pushed. The request was \"commit and push to main\".\n\nd) **Uncommitted changes appeared in the crate-digger working copy during the run.** They include files under apps/api. They did not come from this run and were left alone.\n\ne) **The stale `.shipyard/checks/browser.mjs` now fails, as expected.** It asserts the old example. It also holds an absolute local path. `example-run.check.mjs` supersedes it. It was left in place because nothing is deleted, so removing it is your call.\n\n## What was asked for\n\nReplace the portfolio's Shipyard example (the shipyard.html run data, the Harbor excerpt and intro, and the index.html/script.js terminal replay) with Frisson admin-panel run 2026-11-09T06-16-12. The old run was 2026-11-09T01-05-12. Constraints:\n- Only those three site files change, apart from run artifacts.\n- Run data comes from the source report by script, not retyped.\n- No credentials, owner email or local paths are committed.\n- The three made-up terminal examples stay.\n- Old run artifacts stay.\n\n## Acceptance criteria\n\n| AC | What it checks | Final status |\n|---|---|---|\n| AC1 | Run data deep-equals the source with redaction applied. runId, verdict shipped and target are correct. | Pass, after the fix. |\n| AC2 | No dev login, owner email or domain, local path or password value in the changed files. No old run id in the three site files. | Pass, after the fix and a scrub of run artifacts. |\n| AC3 | The template differs from the source only by the portfolio wrapper. The browserReport line is present. | Pass |\n| AC4 | The intro names the run, quotes the request without the login, and gives the counts. It states the redaction. | Pass |\n| AC5 | The Harbor figure matches the S5 snippet and bullets in the guide. | Pass |\n| AC6 | The terminal replay and static fallback agree. Three made-up runs remain. `node --check` exits 0. | Pass |\n| AC7 | Real browser at 1280 and 390 px. | Pass |\n| AC8 | Outside .shipyard/, the diff lists exactly the three site files. | Pass |\n\n## What was built\n\nThe diff touches three files: index.html (18 lines), script.js (20 lines) and shipyard.html (41 lines). In total that is 40 insertions and 39 deletions.\n- The shipyard.html run data was produced from the source report by script, with redaction applied.\n- The intro and the Harbor excerpt were replaced.\n- SHIPYARD_RUNS[0] and the index.html fallback now show the admin panel run: \"add an admin panel\", ~/frisson, 3 tasks and 12 criteria, 828 tests, 99 browser steps, and 12 of 12.\n- A browser check, `example-run.check.mjs`, was added under `.shipyard/checks/`.\n\n## Test results\n\n**Round 1 (tester), AC1 and AC2 failed.**\n- AC1 evidence: 31 string leaves differed. 30 were intended redactions. One was not: `.tree.files[18].path`, the path of `admin-panel.css`, was mangled because the password rule for the slash-form credential also matched this file path.\n- AC2 evidence: the scan's literal matched legitimate file paths such as `components/admin/AdminBulkImport.vue` five times on shipyard.html line 187. None of these was a credential. The tester also found an absolute local path in the untracked run directory (the report.html runDir field), and brief.json quoting the scan patterns.\n- AC3, AC4, AC5, AC6 and AC8 passed in this round.\n\n**Browser tester.** AC7 passed with `example-run.check.mjs` printing PASS at 1280 and 390 px. The admin panel run plays first, and Run again moves to a made-up run (add dark mode toggle). The Harbor disclosure opens and its link lands with #harbor in view. The page shows verdict shipped, AC12 and the browser tester evidence. Neither page scrolls horizontally, and there are no console errors.\n\n**Fix round 1 (direct fix, scoped retest by tester-2).**\n- AC1 passed: exactly 30 differing leaves, and the file paths are intact.\n- AC2 failed only on run artifacts, not on the site files. cycles/1/browser-output-fix1.txt and report.html contained an absolute local path. brief.json and report.html contained the old run id, quoted in the goal and AC text.\n\n**Harbormaster scrub.** After the artifacts were scrubbed, a scan by command found no sensitive match across the changed files or the commit messages. The old run id is absent from the three site files. AC2 passed. The pattern list is kept outside the repo.\n\n## What went wrong and why\n\n1. **A redaction rule over-matched.** The password rule matched a real file path and corrupted it. The tester caught it and the fix round corrected it.\n2. **The brief nearly published the credential.** The checklist tester noticed that the brief quoted the forbidden strings. AC2 was reworded to describe the strings rather than quote them. This was caught before any run artifact was committed.\n3. **Run artifacts leaked a local path and the old run id.** The run directory was untracked, so nothing was published. The harbormaster scrubbed them before commit.\n4. **The AC2 local-path scan was made case-sensitive.** A case-insensitive match flagged the API route `/api/users/`, which is not a local path.\n5. **Process note.** No surveyor was used. The harbormaster wrote the small map directly.\n\n## Observations (for the owner to choose from)\n\n- **Low:** `.shipyard/checks/browser.mjs` from an earlier run asserts the old example, so the check now fails. It also holds an absolute local path. It is superseded by `example-run.check.mjs`. Removing it is the owner's call.\n- **Low:** Files committed by the earlier run 2026-11-09T01-39-51 (report.html, shipyard-report.json) hold absolute local paths. They were out of scope here and are unchanged.\n\n## Recommended next steps\n\n1. Look at the uncommitted apps/api changes in crate-digger (item d).\n2. Decide whether to delete the stale `browser.mjs`, which also removes one local path.\n3. Decide whether to scrub the absolute paths in the earlier run's committed artifacts. The repo is public, so this is worth doing.\n## Token use\n\nSize: lite. Reported total: 180,494 tokens across 6 agents.\n\n| Role | Agents | Tokens | Share |\n|---|---|---|---|\n| tester | 2 | 66,234 | 37% |\n| browser-tester | 1 | 54,849 | 30% |\n| dev | 2 | 43,042 | 24% |\n| reporter | 1 | 16,369 | 9% |\n\n| Agent | Model | Tokens | Tool uses | Seconds |\n|---|---|---|---|---|\n| dev-T1 | sonnet | 28,517 | 10 | 68 |\n| browser-tester | sonnet | 54,849 | 7 | 48 |\n| tester | sonnet | 39,915 | 18 | 97 |\n| dev-T1-fix1 (fix of T1) | sonnet | 14,525 | 6 | 28 |\n| tester-2 | sonnet | 26,319 | 8 | 45 |\n| reporter | sonnet | 16,369 | 11 | 23 |\n\nThe harbormaster's own tokens are not included: no figure was available.\n\n### Dev models across 2 run(s)\n\n| Model | Tasks | Fix agents | Fixes per task | Tokens |\n|---|---|---|---|---|\n| opus | 1 | 1 | 1.00 | 86,807 |\n| sonnet | 1 | 1 | 1.00 | 43,042 |\n","cycles":[{"n":"1","spec":"# Swap the portfolio's example run\n\nReplace the Frisson single-crate example with the admin panel run (2026-11-09T06-16-12). Run data is copied from the source report by script with a fixed list of redactions, because the site is public and the run text contains a working dev login. The Harbor excerpt is S5 of a guide generated for this run. Wrapper copy and the terminal replay are rewritten from the run's own report.\n\nOne task: the three files are coupled by the same facts and share one owner.\n","plan":{"summary":"One dev swaps the run data with a redaction script, ports the template line, and rewrites the intro, Harbor excerpt and terminal replay.","tasks":[{"id":"T1","goal":"shipyard.html, index.html and script.js show run 2026-11-09T06-16-12, redacted.","description":"Inject redacted run data, port the template line, rewrite wrapper copy, Harbor excerpt and terminal replay.","ownsFiles":["shipyard.html","index.html","script.js"],"dependsOn":[],"criteriaIds":["AC1","AC2","AC3","AC4","AC5","AC6","AC7","AC8"],"model":"sonnet"}]},"testReport":{"criteria":{"AC1":{"verdict":"fail","evidence":"Structural walk of source vs page run-data: 31 differing string leaves. 30 are redactions (local path to ~, dev email to [dev admin email], password to [redacted], owner email/domain). One is NOT: .tree.files[18].path 'apps/web/src/components/admin/admin-panel.css' became 'apps/web/src/components/[mangled]-panel.css' ([slash-form credential] over-redaction corrupts a real file path). runId 2026-11-09T06-16-12, verdict shipped, target ~/code/crate-digger OK."},"AC2":{"verdict":"fail","evidence":"Literal case-insensitive scan: [local-path pattern] 0, dev email regex 0, owner regex 0, old runId 0 in all three files and the commit message. But the [slash-form credential] literal matches shipyard.html line 187 five times, in file paths like components/admin/AdminBulkImport.vue (false positives, not credentials). Adversarial read of 101 password/login-near-admin hits and all quoted admin: none reveals the password value or dev email; they are username, role, route. Untracked run dir (brief.json, report.html) contains the pattern text itself, and report.html has an absolute local runDir path."},"AC3":{"verdict":"pass","evidence":"diff of both templates with run-data masked shows only viewport meta, title, pf- CSS and phone media query, nav, intro, Harbor section. browserReport details line present in both."},"AC4":{"verdict":"pass","evidence":"Intro names admin panel run, quotes request ending at 'verified tag!)' with no login, states 12 of 12, 37 files, about 44 minutes, no fix rounds, login details and email redacted. Wrapper comment states redaction. Only 5px hit is pre-existing CSS padding:5px 10px (present at base), not text."},"AC5":{"verdict":"pass","evidence":"Script: title S5: One guard covers every admin route, path admin.ts:33-39, caption step 5 of 19 (guide has 19 steps), unescaped code === guide S5 snippet, 3 bullets equal."},"AC6":{"verdict":"pass","evidence":"Diffed script.js and index.html: ask, ~/frisson, 3 tasks 12 criteria, 3 dev agents, 828 tests, 99 steps, 12 of 12, branch shipped, 19-step guide match. Tags plan/build/test/ship/pilot/fix all \u003c=5. Three made-up runs remain. Comment names 06-16-12. node --check exit 0."},"AC8":{"verdict":"pass","evidence":"git diff --name-only 725089233e5c... HEAD lists exactly index.html, script.js, shipyard.html."}},"observations":[{"what":"Redaction rule [slash-form credential] is case-sensitive in the build but AC2 scan is case-insensitive; fix by not matching paths (or amend the AC wording).","severity":"medium"},{"what":"Untracked run dir report.html contains an absolute [local-path pattern] runDir path and brief.json quotes the scan patterns; constraint says no local paths in committed run artifacts.","severity":"medium"}]},"browserReport":{"criteria":{"AC7":{"verdict":"pass","evidence":"example-run.check.mjs printed PASS AC7 at 1280 and 390: admin panel run first, [pilot] reached, #sim-dir ~/frisson, Run again -> add dark mode toggle, harbor closed then opens, link lands on shipyard.html#harbor in view, shipped/AC12/run id/Browser tester verdict present, no hscroll on either page, no console errors; 390px harbor code blocks within 34-356px of 390."}},"observations":[]},"defects":{"round":1,"defects":[{"criterion":"AC1","summary":"The password rule for the [slash-form credential] form also matched the file path components/admin/admin-panel.css, mangling a path in tree.files.","owner":"T1","file":"shipyard.html","attempts":[]},{"criterion":"AC2","summary":"Same mangled path. The scan's literal also matched legitimate paths, so the criterion was reworded; no credential was found.","owner":"T1","file":"shipyard.html","attempts":[]}]},"tasks":[{"id":"T1","status":"done","commit":"94932f3","summary":"Run data swapped by script with redactions, template line ported, wrapper copy, Harbor excerpt and terminal replay rewritten."}]}],"agents":[],"runDir":".shipyard/runs/2026-11-09T07-03-16","live":false,"stages":["intake","survey","plan","build","test","fix","report","done"],"tree":{"files":[{"path":"index.html","add":9,"del":9,"wip":false},{"path":"script.js","add":10,"del":10,"wip":false},{"path":"shipyard.html","add":21,"del":20,"wip":false}],"total":3},"stateMtime":1794208426334.5867,"renderedAt":1794208426546}</script>
+<script>
+const D = JSON.parse(document.getElementById('run-data').textContent);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const el = (h) => { const d = document.createElement('div'); d.innerHTML = h.trim(); return d.firstElementChild; };
+
+const st = D.state || {};
+const verdict = (st.verdict || 'pending').toLowerCase();
+const crit = st.criteria || {};
+const critKeys = Object.keys(crit);
+const statements = {};
+const checks = {};
+(D.brief?.acceptanceCriteria || []).forEach(c => { statements[c.id] = c.statement; checks[c.id] = c.check; });
+const keys = critKeys.length ? critKeys : Object.keys(statements);
+const counts = { pass: 0, fail: 0, untested: 0 };
+keys.forEach(k => { counts[(crit[k] || 'untested')] = (counts[(crit[k] || 'untested')] || 0) + 1; });
+const total = keys.length || 1;
+
+const parts = [];
+
+const nowIdx = D.stages.indexOf(st.stage);
+const T = s => { const t = Date.parse(s); return Number.isFinite(t) ? t : null; };
+const dur = ms => {
+  if (ms == null || ms < 0) return '';
+  const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
+  return h ? `${h}h${String(m).padStart(2, '0')}m` : m ? `${m}m${String(r).padStart(2, '0')}s` : `${r}s`;
+};
+// Elements carrying data-since tick every second, so the page looks alive
+// between renders even while one long agent is working.
+const since = (iso, end) => {
+  const a = T(iso); if (a == null) return '—';
+  const b = T(end);
+  return b != null ? dur(b - a) : `<span data-since="${a}">${dur(Date.now() - a)}</span>`;
+};
+const times = st.stageTimes || {};
+const pipeline = D.stages.filter(s => s !== 'done').map((s, i) => {
+  const cls = D.live && i === nowIdx ? 'now' : (nowIdx > i || !D.live ? 'done' : '');
+  const t = times[s];
+  const clock = t?.start ? `<small>${since(t.start, (D.live && i === nowIdx) ? null : (t.end || null))}</small>` : '';
+  return `<div class="${cls}">${s.toUpperCase()}${clock}</div>`;
+}).join('');
+const quietMs = D.stateMtime ? Date.now() - D.stateMtime : 0;
+const active = Array.isArray(st.active) ? st.active : [];
+const usage = Array.isArray(st.usage) ? st.usage : [];
+const tokenTotal = usage.reduce((sum, u) => sum + (u.tokens ?? 0), 0);
+
+parts.push(`
+<header>
+  <h1>SHIPYARD<small>AUTONOMOUS DEV YARD // ${D.live ? 'YARD ACTIVE' : 'RUN RECORD'}</small></h1>
+  <div class="meta">
+    ${D.live
+      ? '<span class="chip verdict live"><span class="dot"></span>WORKING</span>'
+      : `<span class="chip verdict v-${esc(verdict)}">${esc(verdict)}</span>`}
+    <span class="chip">RUN <b>${esc(st.runId || '—')}</b></span>
+    ${st.size ? `<span class="chip">SIZE <b>${esc(st.size)}</b></span>` : ''}
+    ${usage.length ? `<span class="chip">TOKENS <b>${tokenTotal.toLocaleString('en-US')}</b></span>` : ''}
+    ${st.startedAt ? `<span class="chip">ELAPSED <b>${since(st.startedAt, D.live ? null : st.endedAt)}</b></span>` : ''}
+    ${D.live && active.length ? `<span class="chip live">CREW <b>${active.length}</b></span>` : ''}
+    ${D.live ? `<span class="chip nosignal" id="nosignal" data-mtime="${D.stateMtime}" style="display:none">NO SIGNAL <b></b></span>` : ''}
+    <span class="chip">CYCLE <b>${esc(st.cycle || '?')}/${esc(st.maxCycles || 3)}</b></span>
+    ${st.fixRound ? `<span class="chip">FIX ROUND <b>${esc(st.fixRound)}/${esc(st.maxFixRounds || 3)}</b></span>` : ''}
+    <span class="chip">BRANCH <b>${esc(st.branch || '—')}</b></span>
+    <span class="chip">TARGET <b>${esc(st.target || '—')}</b></span>
+    ${(st.fastPaths || []).map(f => `<span class="chip fast">FAST PATH <b>${esc(f)}</b></span>`).join('')}
+  </div>
+  <div class="pipe">${pipeline}</div>
+  <div class="tele">
+    <span>${D.live ? '◉ TELEMETRY LIVE — REFRESHING EVERY 4s' : '· TRANSMISSION ENDED'}</span>
+    <span>STAGE: ${esc((st.stage || 'unknown').toUpperCase())}</span>
+  </div>
+</header>
+${D.live ? '<div class="scan"><i></i></div>' : ''}
+<div class="hazard"></div>`);
+
+if (D.live && active.length) {
+  parts.push(`<section><h2>Crew on deck — ${active.length} working</h2><div class="body"><div class="crew">
+    ${active.map(a => {
+      const t = T(a.since);
+      const slow = t != null && Date.now() - t > 15 * 60 * 1000;
+      return `<div class="hand${slow ? ' slow' : ''}"><div class="role"><span class="dot"></span>${esc(a.role || 'agent')}<span class="clock">${since(a.since)}</span></div>
+        <div class="who">${esc(a.id || '?')}</div>
+        ${a.task ? `<div class="sub" style="color:var(--grey);font-size:11px">${esc(a.task)}</div>` : ''}</div>`;
+    }).join('')}
+  </div></div></section>`);
+}
+
+if (D.tree && D.tree.total) {
+  const wip = D.tree.files.filter(f => f.wip).length;
+  const rows = D.tree.files.map(f => `<tr>
+      <td class="mono">${f.wip ? '<span class="wip">●</span> ' : ''}${esc(f.path)}</td>
+      <td class="num">${f.add == null ? (f.isNew ? '<span class="add">new</span>' : '') : f.add ? '<span class="add">+' + f.add + '</span>' : ''}</td>
+      <td class="num">${f.del ? '<span class="del">−' + f.del + '</span>' : ''}</td></tr>`).join('');
+  parts.push(`<section><h2>Working tree — ${D.tree.total} file${D.tree.total === 1 ? '' : 's'} changed${wip ? ', ' + wip + ' uncommitted' : ''}</h2><div class="body">
+    <table><thead><tr><th>File ${wip ? '(● = being written)' : ''}</th><th style="text-align:right">Added</th><th style="text-align:right">Removed</th></tr></thead><tbody>${rows}</tbody></table>
+    ${D.tree.total > D.tree.files.length ? '<p class="empty">Showing the first ' + D.tree.files.length + '.</p>' : ''}
+  </div></section>`);
+}
+
+if (st.request || D.brief?.goal) {
+  parts.push(`<section><h2>Work order</h2><div class="body">
+    <pre>${esc(D.brief?.goal || st.request)}</pre>
+    ${(D.brief?.assumptions || []).length ? '<p style="margin:11px 0 4px;color:var(--amber-dim);font-size:11px;letter-spacing:.2em">ASSUMPTIONS MADE</p><ul>' + D.brief.assumptions.map(a => '<li>' + esc(a) + '</li>').join('') + '</ul>' : ''}
+  </div></section>`);
+}
+
+// Acceptance criteria
+const bar = `<div class="bar">
+  <i class="p" style="width:${counts.pass / total * 100}%"></i>
+  <i class="f" style="width:${counts.fail / total * 100}%"></i>
+  <i class="u" style="width:${counts.untested / total * 100}%"></i>
+</div>`;
+const cards = keys.length ? keys.map(k => {
+  const s = crit[k] || 'untested';
+  return `<div class="crit"><span class="id">${esc(k)}</span><span class="st ${esc(s)}">${s === 'pass' ? '◉ PASS' : s === 'fail' ? '✗ FAIL' : '· UNTESTED'}</span>
+    <p>${esc(statements[k] || '')}</p>${checks[k] ? `<span class="tag">${esc(checks[k])}</span>` : ''}</div>`;
+}).join('') : '<p class="empty">No acceptance criteria recorded — intake did not complete.</p>';
+parts.push(`<section><h2>Acceptance criteria — ${counts.pass}/${keys.length || 0} pass</h2><div class="body">${keys.length ? bar : ''}<div class="grid">${cards}</div></div></section>`);
+
+// Token use. The figures come straight from state.json's usage list.
+if (usage.length) {
+  const byRole = {};
+  usage.forEach(u => {
+    const r = byRole[u.role] || (byRole[u.role] = { agents: 0, tokens: 0 });
+    r.agents++;
+    r.tokens += u.tokens ?? 0;
+  });
+  const fmt = n => Number(n).toLocaleString('en-US');
+  const roleRows = Object.entries(byRole).sort((a, b) => b[1].tokens - a[1].tokens).map(([role, r]) =>
+    `<tr><td><b>${esc(role)}</b></td><td class="num">${r.agents}</td><td class="num">${fmt(r.tokens)}</td><td class="num">${tokenTotal ? Math.round(r.tokens / tokenTotal * 100) : 0}%</td></tr>`).join('');
+  const agentRows = usage.map(u =>
+    `<tr><td class="mono">${esc(u.agent)}${u.fixOf ? ' (fix of ' + esc(u.fixOf) + ')' : ''}</td><td>${esc(u.role)}</td><td>${esc(u.model || '—')}</td><td class="num">${u.tokens == null ? 'unavailable' : fmt(u.tokens)}</td><td class="num">${u.toolUses ?? '—'}</td></tr>`).join('');
+  const unknown = usage.filter(u => u.tokens == null).length;
+  const hasHarbormaster = usage.some(u => u.role === 'harbormaster');
+  parts.push(`<section><h2>Token use — ${fmt(tokenTotal)} reported</h2><div class="body">
+    <table><thead><tr><th>Role</th><th style="text-align:right">Agents</th><th style="text-align:right">Tokens</th><th style="text-align:right">Share</th></tr></thead><tbody>${roleRows}</tbody></table>
+    ${hasHarbormaster ? '' : "<p class=\"empty\">The harbormaster's own tokens are not included: no figure was available.</p>"}
+    ${unknown ? '<p class="empty">' + unknown + ' agent(s) reported no figure and count as 0, so the real total is higher.</p>' : ''}
+    <details><summary>Per agent</summary><div class="inner"><table><thead><tr><th>Agent</th><th>Role</th><th>Model</th><th style="text-align:right">Tokens</th><th style="text-align:right">Tool uses</th></tr></thead><tbody>${agentRows}</tbody></table></div></details>
+  </div></section>`);
+}
+
+// Cycles
+(D.cycles || []).forEach(c => {
+  const tasks = (c.plan?.tasks || []);
+  const taskState = st.tasks || {};
+  const rows = tasks.length ? tasks.map(t => {
+    const s = taskState[t.id] || 'todo';
+    return `<tr><td><b>${esc(t.id)}</b></td><td>${esc(t.goal)}${t.model ? ` <span class="tag">${esc(t.model)}</span>` : ''}</td>
+      <td class="mono">${esc((t.ownsFiles || []).join(', '))}</td>
+      <td class="mono">${esc((t.dependsOn || []).join(', ') || '—')}</td>
+      <td><span class="tag t-${esc(s)}">${esc(s)}</span></td></tr>`;
+  }).join('') : '<tr><td colspan="5" class="empty">No plan produced for this cycle.</td></tr>';
+
+  parts.push(`<section><h2>Cycle ${esc(c.n)}</h2><div class="body">
+    <div class="cycle-head"><h3>DELEGATION</h3></div>
+    <table><thead><tr><th>Task</th><th>Goal</th><th>Owns files</th><th>After</th><th>State</th></tr></thead><tbody>${rows}</tbody></table>
+    ${c.spec ? '<details><summary>Manager spec — what it intended to build</summary><div class="inner"><pre>' + esc(c.spec) + '</pre></div></details>' : ''}
+    ${c.testReport ? '<details><summary>Tester verdict + evidence</summary><div class="inner"><pre>' + esc(JSON.stringify(c.testReport, null, 2)) + '</pre></div></details>' : ''}
+    ${c.browserReport ? '<details><summary>Browser tester verdict + evidence</summary><div class="inner"><pre>' + esc(JSON.stringify(c.browserReport, null, 2)) + '</pre></div></details>' : ''}
+    ${c.defects ? '<details><summary>Triaged defects</summary><div class="inner"><pre>' + esc(JSON.stringify(c.defects, null, 2)) + '</pre></div></details>' : ''}
+  </div></section>`);
+});
+
+// Deaths
+if ((st.deaths || []).length) {
+  parts.push(`<section><h2>Agent losses — ${st.deaths.length}</h2><div class="body"><table>
+    <thead><tr><th>Agent</th><th>Reason</th><th>Detail</th></tr></thead><tbody>
+    ${st.deaths.map(d => `<tr><td><b>${esc(d.agentId || d.agent || '?')}</b></td><td class="fail">${esc(d.reason)}</td><td class="mono">${esc(d.detail)}</td></tr>`).join('')}
+    </tbody></table></div></section>`);
+}
+
+if (D.reportMd) {
+  parts.push(`<section><h2>Report</h2><div class="body"><pre>${esc(D.reportMd)}</pre></div></section>`);
+}
+
+if ((D.agents || []).length) {
+  parts.push(`<section><h2>Crew logs — ${D.agents.length} agents</h2><div class="body">
+    ${D.agents.map(a => '<details><summary>' + esc(a.id) + '</summary><div class="inner"><pre>' + esc(a.body) + '</pre></div></details>').join('')}
+  </div></section>`);
+}
+
+if (D.ledger) {
+  parts.push(`<section><h2>Harbormaster log</h2><div class="body"><pre>${esc(D.ledger)}</pre></div></section>`);
+}
+
+parts.push(`<div class="hazard"></div><footer>
+  SHIPYARD // ${esc(D.runDir)}<br>
+  ${D.live
+    ? 'YARD ACTIVE — this page reloads itself. Leave the tab open.'
+    : 'TRANSMISSION ENDED — this page is final and will not reload.'}
+</footer>`);
+document.getElementById('app').innerHTML = parts.join('');
+
+// Tick the clocks between reloads, and raise NO SIGNAL if the harbormaster
+// has not written state.json for a long time while the run claims to be live.
+(function tick(){
+  const fmt = ms => {
+    const s = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
+    return h ? h + 'h' + String(m).padStart(2, '0') + 'm' : m ? m + 'm' + String(r).padStart(2, '0') + 's' : r + 's';
+  };
+  const QUIET = 20 * 60 * 1000;
+  function step(){
+    document.querySelectorAll('[data-since]').forEach(n => { n.textContent = fmt(Date.now() - +n.dataset.since); });
+    const ns = document.getElementById('nosignal');
+    if (ns && +ns.dataset.mtime) {
+      const q = Date.now() - +ns.dataset.mtime;
+      ns.style.display = q > QUIET ? '' : 'none';
+      ns.querySelector('b').textContent = fmt(q);
+    }
+  }
+  step(); setInterval(step, 1000);
+})();
+
+// A meta-refresh is a full reload, which would slam every <details> shut and
+// jump you back to the top mid-read. Persist what the reader opened and where
+// they were, keyed by run so two tabs do not fight. sessionStorage, not local:
+// this is view state, and it should die with the tab.
+(function preserveReadingState(){
+  const KEY = 'shipyard:' + (D.state?.runId || 'run');
+  let saved = {};
+  try { saved = JSON.parse(sessionStorage.getItem(KEY) || '{}') } catch {}
+
+  const summaries = () => [...document.querySelectorAll('details')];
+
+  summaries().forEach(d => {
+    const label = d.querySelector('summary')?.textContent?.trim();
+    if (label && saved.open && saved.open.includes(label)) d.open = true;
+    d.addEventListener('toggle', save);
+  });
+
+  if (typeof saved.scroll === 'number') window.scrollTo(0, saved.scroll);
+
+  function save(){
+    const open = summaries().filter(d => d.open)
+      .map(d => d.querySelector('summary')?.textContent?.trim())
+      .filter(Boolean);
+    try { sessionStorage.setItem(KEY, JSON.stringify({ open, scroll: window.scrollY })) } catch {}
+  }
+
+  let t;
+  window.addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(save, 150) }, { passive: true });
+  window.addEventListener('beforeunload', save);
+})();
+</script>
+</body>
+</html>

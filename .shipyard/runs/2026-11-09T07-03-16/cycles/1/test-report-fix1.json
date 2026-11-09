@@ -1,0 +1,18 @@
+{
+ "criteria": {
+  "AC1": {
+   "verdict": "pass",
+   "evidence": "Walked source vs page run-data: exactly 30 differing leaves, no key or length differences. Each is a word-level swap of the dev email, owner email or domain, absolute path to ~, or the password value (dev-email/password pair with a slash included). The file path components/admin/admin-panel.css and other paths are intact. state.runId is 2026-11-09T06-16-12, verdict shipped, target ~/code/crate-digger."
+  },
+  "AC2": {
+   "verdict": "fail",
+   "evidence": "shipyard.html, index.html, script.js and commit messages since baseCommit: zero hits for dev email, owner email or domain, [local-path pattern], or old run id. All password or login near admin hits, quoted admin and slash pairs are redacted placeholders, role, route or path names. No sentence reveals or tells the user to type the password value. FAIL on run artifacts: cycles/1/browser-output-fix1.txt and report.html (runDir field) contain an absolute [local-path pattern] local path. brief.json and report.html contain the old run id (quoted in the goal and AC text). Other run files only mention the [local-path pattern] pattern itself. example-run.check.mjs is clean."
+  }
+ },
+ "observations": [
+  {
+   "what": "The run directory is untracked, so the leaks are not yet committed, but they would be published if it is added. Scrub the runDir path, the stack trace path and the old run id.",
+   "severity": "high"
+  }
+ ]
+}

@@ -1,0 +1,118 @@
+{
+  "runId": "2026-11-09T07-03-16",
+  "target": "~/code/portfolio",
+  "request": "replace the current portfolio shipyard run and harbor pilot example with run 2026-11-09T06-16-12; commit and push to main",
+  "branch": "shipyard/swap-example-admin-run-2026-11-09T07-03-16",
+  "size": "lite",
+  "budgetTokens": null,
+  "stage": "done",
+  "cycle": 1,
+  "maxCycles": 3,
+  "fixRound": 2,
+  "maxFixRounds": 3,
+  "criteria": {
+    "AC1": "pass",
+    "AC2": "pass",
+    "AC3": "pass",
+    "AC4": "pass",
+    "AC5": "pass",
+    "AC6": "pass",
+    "AC7": "pass",
+    "AC8": "pass"
+  },
+  "tasks": {
+    "T1": "done"
+  },
+  "deaths": [],
+  "verdict": "shipped",
+  "baseCommit": "725089233e5c66f15e07ccf45b4c1c076c50c44e",
+  "startedAt": "2026-11-09T07:03:16Z",
+  "endedAt": "2026-11-09T07:13:26Z",
+  "stageTimes": {
+    "survey": {
+      "start": "2026-11-09T07:03:16Z",
+      "end": "2026-11-09T07:06:11Z"
+    },
+    "intake": {
+      "start": "2026-11-09T07:03:16Z",
+      "end": "2026-11-09T07:06:11Z"
+    },
+    "plan": {
+      "start": "2026-11-09T07:06:11Z",
+      "end": "2026-11-09T07:06:11Z"
+    },
+    "build": {
+      "start": "2026-11-09T07:06:11Z",
+      "end": "2026-11-09T07:07:43Z"
+    },
+    "test": {
+      "start": "2026-11-09T07:07:43Z",
+      "end": "2026-11-09T07:12:32Z"
+    },
+    "fix": {
+      "start": "2026-11-09T07:09:56Z",
+      "end": "2026-11-09T07:12:32Z"
+    },
+    "report": {
+      "start": "2026-11-09T07:12:32Z",
+      "end": "2026-11-09T07:13:26Z"
+    }
+  },
+  "active": [],
+  "fastPaths": [
+    "survey-by-harbormaster",
+    "direct-fix",
+    "scoped-retest"
+  ],
+  "usage": [
+    {
+      "agent": "dev-T1",
+      "role": "dev",
+      "model": "sonnet",
+      "tokens": 28517,
+      "toolUses": 10,
+      "durationMs": 67677
+    },
+    {
+      "agent": "browser-tester",
+      "role": "browser-tester",
+      "model": "sonnet",
+      "tokens": 54849,
+      "toolUses": 7,
+      "durationMs": 48187
+    },
+    {
+      "agent": "tester",
+      "role": "tester",
+      "model": "sonnet",
+      "tokens": 39915,
+      "toolUses": 18,
+      "durationMs": 97280
+    },
+    {
+      "agent": "dev-T1-fix1",
+      "role": "dev",
+      "model": "sonnet",
+      "tokens": 14525,
+      "toolUses": 6,
+      "durationMs": 28308,
+      "fixOf": "T1"
+    },
+    {
+      "agent": "tester-2",
+      "role": "tester",
+      "model": "sonnet",
+      "tokens": 26319,
+      "toolUses": 8,
+      "durationMs": 45285
+    },
+    {
+      "agent": "reporter",
+      "role": "reporter",
+      "model": "sonnet",
+      "tokens": 16369,
+      "toolUses": 11,
+      "durationMs": 22639
+    }
+  ]
+}

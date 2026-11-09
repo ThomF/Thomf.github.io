@@ -1,0 +1,8 @@
+{
+ "criteria": {
+  "AC2": {
+   "verdict": "pass",
+   "evidence": "Harbormaster scan by command after scrubbing run artifacts: no sensitive match across 20 changed files or the commit messages; the old run id is absent from the three site files. The pattern list is kept outside the repo."
+  }
+ }
+}

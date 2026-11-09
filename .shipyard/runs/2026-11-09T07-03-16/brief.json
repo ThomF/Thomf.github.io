@@ -1,0 +1,62 @@
+{
+ "goal": "The portfolio's Shipyard example (shipyard.html run data, Harbor excerpt, intro, and the index.html/script.js terminal replay) shows Frisson admin-panel run 2026-11-09T06-16-12 instead of 2026-11-09T01-05-12, with credentials and personal details redacted because the site is public.",
+ "constraints": [
+  "Only shipyard.html, index.html and script.js change, apart from run artifacts under .shipyard/.",
+  "Run data comes from the source report's run-data block by script, never retyped; only the listed redactions differ.",
+  "The literal dev login, the owner's .env email and absolute local paths must not be committed anywhere in this repo, including run artifacts.",
+  "The three made-up terminal examples stay.",
+  "Old run artifacts under .shipyard/runs stay."
+ ],
+ "assumptions": [
+  "'Replace' means the single example on the site, not removing old run records.",
+  "Redaction is wanted even though not requested: the site and repo are public and the login is a working credential on any database carrying that row. The page says the details are redacted.",
+  "The Harbor excerpt comes from a guide generated for this run, because none existed. The guide stays in crate-digger, git-excluded, as earlier runs' guides do."
+ ],
+ "risks": [
+  "A missed credential variant in 114 KB of JSON text.",
+  "Over-redacting the word admin, which is also the feature name, role and route.",
+  "The page claiming facts that belong to the old run."
+ ],
+ "acceptanceCriteria": [
+  {
+   "id": "AC1",
+   "statement": "Parsing the run-data block in shipyard.html and the one in the source report (with redaction applied to the source's string values) gives deep-equal objects, and state.runId is 2026-11-09T06-16-12, verdict shipped, state.target ~/code/crate-digger.",
+   "check": "command"
+  },
+  {
+   "id": "AC2",
+   "statement": "A scan of all files changed on the branch finds none of: the dev login email, the owner's email or email domain, an absolute local path, or any text giving the dev account's password value. shipyard.html, index.html and script.js also do not contain the old run id 2026-11-09T01-05-12. The patterns live outside the repo, so this criterion does not publish them. File paths and the words for the admin role, route, panel and username remain.",
+   "check": "command"
+  },
+  {
+   "id": "AC3",
+   "statement": "shipyard.html's template differs from the source report's only by the portfolio wrapper (viewport meta, title, pf- CSS and phone layout, nav, intro, Harbor section); it has the browserReport details line, so the browser tester's evidence renders.",
+   "check": "command"
+  },
+  {
+   "id": "AC4",
+   "statement": "The shipyard.html intro names the admin panel run, quotes the request without the login, and states 12 of 12 criteria, 37 files, about 44 minutes, no fix rounds, and that login details and an email address are redacted. No text in the wrapper mentions single-crate, 5px or sleeve. The wrapper comment states what was redacted.",
+   "check": "command"
+  },
+  {
+   "id": "AC5",
+   "statement": "The Harbor figure's title is S5: One guard covers every admin route, the path is apps/api/src/routes/admin.ts:33-39, its caption says step 5 of 19, and its code (HTML-unescaped) is byte-identical to the S5 snippet in the run's REVIEW_GUIDE.md, as are its three bullets' text.",
+   "check": "command"
+  },
+  {
+   "id": "AC6",
+   "statement": "SHIPYARD_RUNS[0] in script.js and the static fallback in index.html show the same lines: ask 'add an admin panel', dir ~/frisson, 3 tasks and 12 criteria, three dev agents, 828 tests, 99 browser steps, 12 of 12, branch shipped, /harbor 19-step guide. All tags are at most 5 characters. Three made-up runs remain. The script.js comment names the new run. node --check script.js exits 0.",
+   "check": "command"
+  },
+  {
+   "id": "AC7",
+   "statement": "In a real browser at 1280 and 390 px wide against a local server: the terminal plays the admin panel run first and Run again moves to a made-up run; the Harbor disclosure opens and its link lands with #harbor in view; shipyard.html renders verdict shipped, AC12, and the browser tester evidence panel; neither page scrolls horizontally; no console errors.",
+   "check": "browser"
+  },
+  {
+   "id": "AC8",
+   "statement": "git diff --name-only <baseCommit> HEAD outside .shipyard/ lists exactly shipyard.html, index.html and script.js.",
+   "check": "command"
+  }
+ ]
+}

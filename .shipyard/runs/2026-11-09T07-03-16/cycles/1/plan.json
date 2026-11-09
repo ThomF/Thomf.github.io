@@ -1,0 +1,27 @@
+{
+ "summary": "One dev swaps the run data with a redaction script, ports the template line, and rewrites the intro, Harbor excerpt and terminal replay.",
+ "tasks": [
+  {
+   "id": "T1",
+   "goal": "shipyard.html, index.html and script.js show run 2026-11-09T06-16-12, redacted.",
+   "description": "Inject redacted run data, port the template line, rewrite wrapper copy, Harbor excerpt and terminal replay.",
+   "ownsFiles": [
+    "shipyard.html",
+    "index.html",
+    "script.js"
+   ],
+   "dependsOn": [],
+   "criteriaIds": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8"
+   ],
+   "model": "sonnet"
+  }
+ ]
+}

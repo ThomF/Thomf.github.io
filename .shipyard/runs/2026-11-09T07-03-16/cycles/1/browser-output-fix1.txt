@@ -1,0 +1,52 @@
+== browser.mjs
+width 1280
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 8000ms exceeded.
+    at .shipyard/checks/browser.mjs:20:12 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v22.23.3
+
+== example-run.check.mjs
+width 1280
+   ok 1280 plays admin panel first
+   ok 1280 reaches [pilot]
+   ok 1280 sim dir ~/frisson
+   ok 1280 run again -> dark mode
+   ok 1280 harbor closed initially
+   ok 1280 harbor opens on click
+   ok 1280 body visible
+   ok 1280 index no hscroll, disclosure open
+   ok 1280 #harbor in view top=0
+   ok 1280 renders shipped
+   ok 1280 renders AC12
+   ok 1280 run id
+   ok 1280 Browser tester verdict summary
+   ok 1280 shipyard.html no hscroll
+   ok 1280 harbor figure code inside screen [[102,367],[102,1178],[114,820]]
+   ok 1280 no console errors []
+width 390
+   ok 390 plays admin panel first
+   ok 390 reaches [pilot]
+   ok 390 sim dir ~/frisson
+   ok 390 run again -> dark mode
+   ok 390 harbor closed initially
+   ok 390 harbor opens on click
+   ok 390 body visible
+   ok 390 index no hscroll, disclosure open
+   ok 390 #harbor in view top=0
+   ok 390 renders shipped
+   ok 390 renders AC12
+   ok 390 run id
+   ok 390 Browser tester verdict summary
+   ok 390 shipyard.html no hscroll
+   ok 390 harbor figure code inside screen [[34,299],[34,356],[46,348]]
+   ok 390 no console errors []
+screenshots [temp]
+PASS AC7
+

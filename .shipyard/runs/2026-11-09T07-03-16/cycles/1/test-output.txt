@@ -1,0 +1,1 @@
+node --check script.js exit 0

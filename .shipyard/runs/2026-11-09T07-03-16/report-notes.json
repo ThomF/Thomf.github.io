@@ -1,0 +1,34 @@
+{
+  "plan_changes": [
+    {
+      "change": "Generated a Harbor guide for the source run before swapping the excerpt",
+      "why": "Run 06-16-12 had no REVIEW_GUIDE.md, and the page promises a real excerpt"
+    },
+    {
+      "change": "Added redaction of the dev login, an owner email and local paths to the swapped run data",
+      "why": "The site and repo are public, and the run text holds a working dev credential"
+    },
+    {
+      "change": "AC2's [local-path pattern] scan made case-sensitive",
+      "why": "A case-insensitive match flags the API route /api/users/, which is not a local path"
+    },
+    {
+      "change": "AC2 reworded to describe the forbidden strings instead of quoting them",
+      "why": "The checklist tester noticed the brief itself listed the patterns, which would have published the credential. Caught before any run artifact was committed."
+    }
+  ],
+  "notes": [
+    "Harbor guide built from the logic files' context ranges rather than the whole 311 KB context: tests, CSS and docs were classified as plumbing from their paths. /harbor verify passed all 48 snippets.",
+    "No surveyor: the harbormaster wrote the small map directly from the three files already read, since a repo this small needs no agent."
+  ],
+  "observations": [
+    {
+      "what": ".shipyard/checks/browser.mjs, from an earlier run, asserts the old example, so run-check checks now reports it as failed. That is expected. It also holds an absolute local path. Superseded by example-run.check.mjs; left in place because nothing is deleted. Removing it is the owner's call.",
+      "severity": "low"
+    },
+    {
+      "what": "Files committed by the earlier run 2026-11-09T01-39-51 (report.html, shipyard-report.json) hold absolute local paths. Out of scope here and left unchanged.",
+      "severity": "low"
+    }
+  ]
+}
