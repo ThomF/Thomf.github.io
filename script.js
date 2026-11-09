@@ -61,10 +61,24 @@ document.querySelectorAll(".label, .window, .project, .chips, .contact__line").f
 });
 
 // ── Shipyard demo terminal ─────────────────────────────────────
-// A scripted (fake) run: nothing here talks to a server.
-// Each run: the feature request, then [tag, text, result] steps.
+// A scripted replay: nothing here talks to a server.
+// The first run is real, condensed from Shipyard's report for the Frisson
+// run 2026-11-09T01-05-12 (shipyard.html). The other two are invented examples.
+// Each run: optional dir (default ~/your-repo), the feature request, then
+// [tag, text, result] steps. Tags are at most 5 characters, or the padding breaks.
 // result: "ok" ✓, "bad" ✗, "ship" ↗, or "" for none.
 const SHIPYARD_RUNS = [
+  { dir: "~/frisson", ask: "only show the crate you are on", steps: [
+    ["plan",  "2 tasks · 12 criteria", ""],
+    ["build", "dev agent → CrateView.vue", "ok"],
+    ["build", "dev agent → docs, Playwright", "ok"],
+    ["test",  "tester agent → 12 of 12", "ok"],
+    ["test",  "exploratory → 5px click target", "bad"],
+    ["fix",   "CrateBox.vue → full sleeve clicks", "ok"],
+    ["test",  "686 tests · 12 of 12", "ok"],
+    ["ship",  "branch shipped", "ship"],
+    ["pilot", "/harbor → 8-step guide", "ok"],
+  ]},
   { ask: "add dark mode toggle", steps: [
     ["plan",  "3 tasks · 2 files", ""],
     ["build", "dev agent → ThemeToggle.vue", "ok"],
@@ -93,6 +107,7 @@ const SHIPYARD_RUNS = [
 (() => {
   const out = document.getElementById("sim-out");
   const replay = document.getElementById("sim-replay");
+  const dir = document.getElementById("sim-dir");
   if (!out || !replay) return;            // static fallback log stays as-is
 
   const MARK = { ok: ["sim__ok", "✓"], bad: ["sim__bad", "✗"], ship: ["sim__ok", "↗"] };
@@ -145,7 +160,11 @@ const SHIPYARD_RUNS = [
     caret.remove();
   }
 
-  function next() { play(SHIPYARD_RUNS[runIndex++ % SHIPYARD_RUNS.length]); }
+  function next() {
+    const run = SHIPYARD_RUNS[runIndex++ % SHIPYARD_RUNS.length];
+    if (dir) dir.textContent = run.dir || "~/your-repo";
+    play(run);
+  }
   replay.addEventListener("click", next);
 
   // Start the first run when the card scrolls into view.

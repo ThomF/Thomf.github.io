@@ -150,20 +150,36 @@
               as they build your feature, test it, and fix any issues. When the feature is ready,
               it can even ship it to your repo.
             </p>
-            <!-- Scripted demo run. Edit the runs in script.js (SHIPYARD_RUNS). -->
+            <p>
+              The terminal below replays a real Frisson run, condensed. "Run again" moves on to two made-up examples.
+            </p>
+            <!-- Scripted demo. The first run replays a real one; edit the runs in script.js (SHIPYARD_RUNS). The fallback below shows the real run. -->
             <div class="sim" id="sim">
               <div class="sim__bar">
-                <span>~/your-repo</span>
+                <span id="sim-dir">~/frisson</span>
                 <button class="sim__btn" id="sim-replay" type="button">↻ run again</button>
               </div>
-              <pre class="sim__out" id="sim-out" aria-live="off"><span class="sim__cmd">&gt; /shipyard "add dark mode toggle"</span>
-<span class="sim__tag">[plan]</span>  3 tasks · 2 files
-<span class="sim__tag">[build]</span> dev agent → ThemeToggle.vue <span class="sim__ok">✓</span>
-<span class="sim__tag">[test]</span>  tester agent → 1 failing <span class="sim__bad">✗</span>
-<span class="sim__tag">[fix]</span>   patched contrast check <span class="sim__ok">✓</span>
-<span class="sim__tag">[test]</span>  12 passing <span class="sim__ok">✓</span>
-<span class="sim__tag">[ship]</span>  PR opened <span class="sim__ok">↗</span></pre>
+              <pre class="sim__out" id="sim-out" aria-live="off"><span class="sim__cmd">&gt; /shipyard "only show the crate you are on"</span>
+<span class="sim__tag">[plan]</span>  2 tasks · 12 criteria
+<span class="sim__tag">[build]</span> dev agent → CrateView.vue <span class="sim__ok">✓</span>
+<span class="sim__tag">[build]</span> dev agent → docs, Playwright <span class="sim__ok">✓</span>
+<span class="sim__tag">[test]</span>  tester agent → 12 of 12 <span class="sim__ok">✓</span>
+<span class="sim__tag">[test]</span>  exploratory → 5px click target <span class="sim__bad">✗</span>
+<span class="sim__tag">[fix]</span>   CrateBox.vue → full sleeve clicks <span class="sim__ok">✓</span>
+<span class="sim__tag">[test]</span>  686 tests · 12 of 12 <span class="sim__ok">✓</span>
+<span class="sim__tag">[ship]</span>  branch shipped <span class="sim__ok">↗</span>
+<span class="sim__tag">[pilot]</span> /harbor → 8-step guide <span class="sim__ok">✓</span></pre>
             </div>
+            <details class="harbor">
+              <summary>What's the Harbor Pilot?</summary>
+              <div class="harbor__body">
+                <p>After a build, <code>/harbor</code> lays the real code out in the order the data moves, so a person can read it from start to finish.</p>
+                <p>It is not a reviewer: it does not approve, fix or score anything. You are the reviewer.</p>
+                <p>The code can't be paraphrased, because Claude only cites line ranges. A script copies those lines from the commit and refuses citations that don't exist.</p>
+                <p><code>/harbor ask</code> answers with quoted lines. <code>/harbor verify</code> re-checks every snippet against the branch.</p>
+                <a href="shipyard.html#harbor" class="btn btn--ghost">See a real guide excerpt ↗</a>
+              </div>
+            </details>
             <ul class="tags"><li>AI Agents</li><li>Dev Tools</li><li>CLI</li></ul>
             <div class="links">
               <a href="shipyard.html" class="btn">View an Example Run ↗</a>

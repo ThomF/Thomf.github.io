@@ -284,7 +284,7 @@ main { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
 .sim__out {
   margin: 0; padding: 10px 12px;
   font: 12px/1.6 var(--mono); color: var(--text);
-  white-space: pre-wrap; min-height: calc(7 * 1.6em + 20px);
+  white-space: pre-wrap; min-height: calc(10 * 1.6em + 20px);
 }
 .sim__cmd { color: var(--accent); }
 .sim__tag { color: var(--cyan); }
@@ -292,6 +292,19 @@ main { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
 .sim__bad { color: var(--red); }
 .sim__dim { color: var(--dim); }
 .sim__caret { color: var(--accent); animation: blink 1s steps(1) infinite; }
+
+/* Harbor Pilot disclosure */
+.harbor { border: 1px solid var(--line); background: var(--bg); }
+.harbor summary {
+  padding: 8px 10px; cursor: pointer;
+  font-size: 12px; letter-spacing: .08em; color: var(--accent);
+}
+.harbor summary:hover { text-decoration: underline; }
+.harbor summary:focus-visible { outline: 1px solid var(--accent); }
+.harbor[open] summary { border-bottom: 1px solid var(--line); }
+.harbor__body { padding: 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.harbor__body p { color: var(--dim); font-size: 13px; }
+.harbor__body code { font-family: var(--mono); color: var(--accent); }
 
 /* Buttons */
 .links { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -332,6 +345,7 @@ main { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
   .log li { grid-template-columns: 1fr; gap: 4px; }
   .window__body { padding: 18px; }
   .project__art { font-size: 11px; }
+  .sim__out { font-size: 11px; padding: 10px 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
