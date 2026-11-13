@@ -71,13 +71,20 @@
         </div>
         <!-- ✏️ EDIT: your experience. Copy a <li> to add one. -->
         <ol class="window__body log">
-          <li>
-            <span class="log__when">Nov 2023 — now</span>
-            <div>
-              <h3>Application Developer <em>· Pennant</em></h3>
-              <p>Full-time, remote from Boise, Idaho. I build and maintain internal applications for Pennant Services in Retool.</p>
-            </div>
-          </li>
+      <li>
+  <span class="log__when">Nov 2023 to Nov 2026</span>
+  <div>
+    <h3>Application Developer <em>· Pennant</em></h3>
+    <p>Full-time, remote from Boise, Idaho. I built and maintained internal healthcare applications on Retool and Snowflake, then helped migrate them to SvelteKit and a Go API gateway using Claude Code.</p>
+    <ul class="log__points">
+      <li><strong>Clinical meeting tracker.</strong> An agency leader asked us to replace the Excel sheets their teams used to prep patient review meetings. Prep took hours, so most leaders skipped these meetings. We built a 10-step guided meeting that pulls patient data in automatically. I owned the prep page, about half the patient data pages, and the follow-up and resolve system for meetings of about 60 clinicians. After launch, teams told us notes were getting lost when meetings ran long, so I built carry-forward: any unresolved follow-up shows up in the next meeting. Teams now run these meetings about every two weeks.</li>
+      <li><strong>Patient SMS system.</strong> Built it end to end: a Twilio JavaScript hook plus a Retool workflow that filters messages and routes each patient to the right pipeline. When an upstream data change caused one patient to get duplicate opt-in texts, I shipped a one-text-per-number guard right away, then fixed the root cause in the data.</li>
+      <li><strong>Reliable multi-table saves.</strong> Forms that wrote to several tables were chained from Retool, so a refresh mid-save could leave half-written records. I moved each flow into a single Snowflake stored procedure that creates, updates or deletes from one payload, rolls back on failure and returns the new ID.</li>
+      <li><strong>HL7 admit, discharge and transfer alerts.</strong> Care teams could only clear alerts all at once. I rebuilt about 50 alerts a week from flat event rows into per-patient timelines by location, with diagnoses, so teams could clear them location by location. Shipped in a few days.</li>
+      <li><strong>Migration to SvelteKit and Go.</strong> Rebuilt my Retool risk prediction drawer, which shows a patient's likelihood of events like hospitalization, by directing Claude Code agents in small, reviewed steps to a pixel-perfect match with the design. I also pushed the team to prove sign-in and database access end to end early, before building more endpoints.</li>
+    </ul>
+  </div>
+</li>
           <li>
             <span class="log__when">Jan — Apr 2023</span>
             <div>

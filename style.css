@@ -351,3 +351,12 @@ main { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+
+.log__points {
+  margin: 0.75rem 0 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.log__points strong { font-weight: 600; }
